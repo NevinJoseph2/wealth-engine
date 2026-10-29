@@ -1,0 +1,3430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#020617">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Wealth Engine">
+  <title>Wealth Telemetry & Personal Liquidity Engine</title>
+  
+  <!-- Web App Manifest (Data URI for zero-server PWA installability) -->
+  <link rel="manifest" href="data:application/manifest+json;utf-8,%7B%22name%22%3A%22Wealth%20Telemetry%20Engine%22%2C%22short_name%22%3A%22WealthEngine%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23020617%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fapi.iconify.design%2Flucide%3Awallet.svg%3Fcolor%3D%25236366f1%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    .font-mono-num { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum' on, 'lnum' on; }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .pulse-amber { animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .donut-slice {
+      transition: stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1), stroke-width 0.2s ease, opacity 0.2s ease;
+    }
+    .donut-slice:hover {
+      stroke-width: 22px;
+      opacity: 0.9;
+      cursor: pointer;
+    }
+    @supports (padding-top: env(safe-area-inset-top)) {
+      header { padding-top: max(0.75rem, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white pb-24 sm:pb-16">
+
+  <!-- TOP APP BAR -->
+  <header class="bg-slate-900/95 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-white text-base shadow-md shadow-indigo-500/20 flex-shrink-0">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm font-bold tracking-tight text-white uppercase tracking-wider">Wealth Telemetry</h1>
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-400 border border-indigo-800/80 hidden xs:inline">PWA Engine</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Dual-Bank, Dual-Card & Sovereign Asset Accounting System</p>
+        </div>
+      </div>
+      
+      <!-- Action Controls -->
+      <div class="flex items-center gap-2">
+        <button id="pwa-install-btn" type="button" class="hidden text-xs bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors">
+          <span>📲</span> <span class="hidden sm:inline">Install App</span>
+        </button>
+        <button id="pwa-guide-btn" type="button" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition-colors" title="Mobile App Setup Guide">
+          <span>📱</span> <span class="hidden md:inline">Mobile PWA</span>
+        </button>
+        <button id="config-btn" type="button" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition-colors" title="Configure Spend Limits & Budgets">
+          <span>⚙️</span> <span class="hidden sm:inline">Settings & Limits</span>
+        </button>
+        <button id="data-hub-btn" type="button" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1.5 transition-colors">
+          <span>📊</span> <span class="hidden sm:inline">CSV / Backup</span>
+        </button>
+        <button id="open-modal-btn" type="button" class="text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg shadow-sm shadow-indigo-600/30 flex items-center gap-1.5 transition-colors">
+          <span>➕</span> <span>Log Txn</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-5 space-y-6">
+
+    <!-- MONTHLY NAVIGATOR & TIMELINE BAR -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-3 sm:p-4 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <span>📅</span> Accounting Period:
+        </span>
+        <div class="flex items-center bg-slate-950 border border-slate-800 rounded-xl p-1">
+          <button id="prev-month-btn" type="button" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="Previous Month">
+            ◀
+          </button>
+          <select id="month-select" class="bg-transparent border-0 text-xs font-bold text-slate-100 px-2.5 py-1 focus:outline-none cursor-pointer">
+            <option value="2026-10">October 2026 (Active Period)</option>
+            <option value="2026-09">September 2026</option>
+            <option value="2026-08">August 2026</option>
+            <option value="ALL">All Time / Cumulative View</option>
+          </select>
+          <button id="next-month-btn" type="button" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="Next Month">
+            ▶
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs">
+        <div class="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-400">
+          Period Outflows: <strong id="period-outflows-label" class="text-rose-400 font-mono-num font-bold">₹0</strong>
+        </div>
+        <div class="bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 text-slate-400">
+          Period Inflows: <strong id="period-inflows-label" class="text-emerald-400 font-mono-num font-bold">₹0</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXECUTIVE TELEMETRY KPI BANNER -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Executive Wealth & Liquidity Telemetry</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <div class="text-[11px] text-slate-400">
+          Double-Entry: <span class="text-emerald-400 font-mono font-medium">RECONCILED</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+        <!-- TOTAL NET WORTH -->
+        <div class="col-span-2 md:col-span-1 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/70 flex flex-col justify-between">
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Net Worth</span>
+          <div class="my-1.5">
+            <span id="kpi-net-worth" class="text-xl sm:text-2xl font-black text-white font-mono-num">₹0</span>
+          </div>
+          <span class="text-[10px] text-indigo-400">Cash + Assets - Card Debt</span>
+        </div>
+
+        <!-- SPENDABLE LIQUIDITY -->
+        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/70 flex flex-col justify-between">
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Liquid Bank Cash</span>
+          <div class="my-1.5">
+            <span id="kpi-liquid-cash" class="text-xl sm:text-2xl font-bold text-emerald-400 font-mono-num">₹0</span>
+          </div>
+          <span class="text-[10px] text-slate-400">HDFC + Federal Spendable</span>
+        </div>
+
+        <!-- HDFC SALARY -->
+        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/70 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">HDFC Salary A/C</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">NO UPI</span>
+          </div>
+          <div class="my-1.5">
+            <span id="kpi-hdfc-bal" class="text-xl font-bold text-slate-100 font-mono-num">₹0</span>
+          </div>
+          <span class="text-[10px] text-slate-400">Rent, PPF & Allocations</span>
+        </div>
+
+        <!-- FEDERAL SAVINGS -->
+        <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/70 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Federal (UPI)</span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">UPI ACTIVE</span>
+          </div>
+          <div class="my-1.5">
+            <span id="kpi-federal-bal" class="text-xl font-bold text-slate-100 font-mono-num">₹0</span>
+          </div>
+          <span class="text-[10px] text-slate-400">Retail & Daily Operations</span>
+        </div>
+
+        <!-- TOTAL CC DUE -->
+        <div class="col-span-2 md:col-span-1 bg-slate-950/70 p-3.5 rounded-xl border border-slate-800/70 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total CC Due</span>
+            <span id="portfolio-cur-badge" class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-400 border border-indigo-800">CUR 0%</span>
+          </div>
+          <div class="my-1.5">
+            <span id="kpi-cc-due" class="text-xl font-bold text-rose-400 font-mono-num">₹0</span>
+          </div>
+          <span id="portfolio-safe-cap-label" class="text-[10px] text-slate-400">Combined Cap: ₹0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 z-50 bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center justify-between gap-4 max-w-md transition-all">
+      <div class="flex items-center gap-2.5">
+        <span id="toast-icon" class="text-base">✓</span>
+        <span id="toast-message" class="text-xs font-medium">Notification</span>
+      </div>
+      <button id="toast-close" type="button" class="text-slate-400 hover:text-white text-base font-bold">&times;</button>
+    </div>
+
+    <!-- MAIN GRID PANELS (WATERFALL & CARDS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- PANEL 1: BANK RECONCILIATION WATERFALL (7 COLS) -->
+      <section class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <span>🌊</span> Panel 1: Bank Reconciliation Waterfall
+            </h2>
+            <p class="text-[11px] text-slate-500 mt-0.5" id="waterfall-period-subtitle">Monthly period reconciliation with strict capital isolation</p>
+          </div>
+          <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">₹ Indian Rupee</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[500px]">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-800 text-[11px]">
+                <th class="pb-2.5 font-semibold">Account Register</th>
+                <th class="pb-2.5 font-semibold text-right">Period Opening</th>
+                <th class="pb-2.5 font-semibold text-right text-emerald-400">Inflows</th>
+                <th class="pb-2.5 font-semibold text-right text-rose-400">Outflows</th>
+                <th class="pb-2.5 font-semibold text-right text-indigo-400">Assets/Trf</th>
+                <th class="pb-2.5 font-semibold text-right text-amber-400">CC Pay</th>
+                <th class="pb-2.5 font-semibold text-right text-white">Period Closing</th>
+              </tr>
+            </thead>
+            <tbody id="waterfall-tbody" class="divide-y divide-slate-800/60 font-mono-num">
+              <!-- Dynamically populated -->
+            </tbody>
+            <tfoot class="border-t-2 border-slate-800 text-xs font-bold font-mono-num">
+              <tr class="text-slate-200">
+                <td class="pt-3">Total Spendable</td>
+                <td id="foot-opening" class="pt-3 text-right">₹0</td>
+                <td id="foot-inflows" class="pt-3 text-right text-emerald-400">+₹0</td>
+                <td id="foot-outflows" class="pt-3 text-right text-rose-400">-₹0</td>
+                <td id="foot-assets" class="pt-3 text-right text-indigo-400">-₹0</td>
+                <td id="foot-ccpay" class="pt-3 text-right text-amber-400">-₹0</td>
+                <td id="foot-spendable" class="pt-3 text-right text-emerald-400 text-sm">₹0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Locked Assets Breakdown -->
+        <div class="pt-3 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">FD Lien (Signet Collateral)</span>
+            <span class="text-slate-200 font-bold font-mono-num">₹30,000</span>
+            <span class="text-[9px] text-amber-500 block">7.0% p.a. • Locked</span>
+          </div>
+          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">HDFC PPF (Tax-Free EEE)</span>
+            <span class="text-slate-200 font-bold font-mono-num">₹500</span>
+            <span class="text-[9px] text-emerald-500 block">7.1% Sovereign Compounded</span>
+          </div>
+          <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+            <span class="text-slate-500 block text-[10px]">Market Deployments</span>
+            <span class="text-slate-200 font-bold font-mono-num">₹0</span>
+            <span class="text-[9px] text-slate-400 block">Cost Basis Only</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: CREDIT CARD TELEMETRY & CUR ENGINE (5 COLS) -->
+      <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span>💳</span> Panel 2: Credit Card Telemetry & CUR
+              </h2>
+              <p class="text-[11px] text-slate-500 mt-0.5" id="cur-guardrail-subtitle">30% Safe Utilization Guardrail (Individual & Aggregate)</p>
+            </div>
+            <span id="aggregate-status-pill" class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              OPTIMAL (0%)
+            </span>
+          </div>
+
+          <div class="space-y-3 mt-3.5" id="cc-cards-container">
+            <!-- Dynamically populated cards -->
+          </div>
+        </div>
+
+        <!-- Aggregate CUR Bar -->
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-medium">Aggregate Credit Utilization:</span>
+            <span id="aggregate-cur-text" class="font-bold font-mono-num text-slate-200">₹0 / ₹1,14,000 (0%)</span>
+          </div>
+          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+            <div id="aggregate-cur-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-slate-500">
+            <span>0%</span>
+            <span id="agg-safe-cap-label" class="text-amber-400">Safe Cap: 30% (₹34,200)</span>
+            <span id="agg-total-limit-label">100% (₹1,14,000)</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- PANEL 3: 10 MASTER SPEND CATEGORIES & BUDGET VARIANCE TRACKER (12 COLS) -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span>📊</span> Panel 3: Master Spend Categories & Budget Variance Engine
+          </h2>
+          <p class="text-[11px] text-slate-500 mt-0.5" id="category-chart-subtitle">Category spend tracking against allocated monthly budget caps</p>
+        </div>
+        
+        <!-- Filter Controls (All / Needs / Wants) -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex p-1 bg-slate-950 border border-slate-800 rounded-xl text-[11px]">
+            <button id="cat-filter-all-btn" type="button" class="px-2.5 py-1 rounded-lg font-semibold bg-indigo-600 text-white transition-colors">
+              All 10 Categories
+            </button>
+            <button id="cat-filter-needs-btn" type="button" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-colors">
+              🛡️ Needs
+            </button>
+            <button id="cat-filter-wants-btn" type="button" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-colors">
+              🎯 Wants
+            </button>
+          </div>
+          <button id="open-cat-limits-btn" type="button" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 flex items-center gap-1.5 transition-colors">
+            <span>✏️</span> Edit Category Limits
+          </button>
+          <span class="text-[11px] bg-slate-950 border border-slate-800 text-slate-300 px-3 py-1 rounded-lg">
+            Period Living Spend: <strong id="cat-total-spend-badge" class="text-rose-400 font-mono-num">₹0</strong>
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left: Interactive Vector Donut Chart -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-slate-950/60 rounded-xl border border-slate-800/80">
+          <div class="relative w-60 h-60 flex items-center justify-center my-2">
+            <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#1e293b" stroke-width="18"></circle>
+              <g id="donut-segments-group">
+                <!-- Dynamically generated circle paths -->
+              </g>
+            </svg>
+            
+            <!-- Center Donut Text -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4">
+              <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider line-clamp-1" id="donut-center-label">Living Outflows</span>
+              <span class="text-xl font-bold font-mono-num text-white" id="donut-center-val">₹0</span>
+              <span class="text-[10px] text-slate-500 font-medium" id="donut-center-pct">Total Spent</span>
+            </div>
+          </div>
+
+          <div class="w-full pt-3 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-center text-[10px]">
+            <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-slate-400 block font-medium">Needs (Essential)</span>
+              <span id="cat-needs-share-label" class="font-bold text-indigo-400 font-mono-num text-xs">₹0</span>
+              <span class="text-[9px] text-slate-500 block">Cap: ₹39,000 (≤50%)</span>
+            </div>
+            <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              <span class="text-slate-400 block font-medium">Wants (Discretionary)</span>
+              <span id="cat-wants-share-label" class="font-bold text-amber-400 font-mono-num text-xs">₹0</span>
+              <span class="text-[9px] text-slate-500 block">Cap: ₹15,500 (≤30%)</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2.5 text-center">Hover on any category bar to inspect details and budget utilization</p>
+        </div>
+
+        <!-- Right: 10 Master Categories with Budget Progress & Subcategory Badges -->
+        <div class="lg:col-span-7 space-y-2.5 max-h-[460px] overflow-y-auto pr-1" id="category-bars-container">
+          <!-- Populated dynamically -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LOWER ROW: CHANNELS, 50/30/20 BURNDOWN & TAX SENTRY -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+      <!-- PANEL 4: PAYMENT CHANNEL & APP ANALYTICS (4 COLS) -->
+      <section class="md:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
+        <div class="border-b border-slate-800 pb-2.5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span>📱</span> Panel 4: Channel Analytics
+          </h2>
+          <p class="text-[11px] text-slate-500 mt-0.5" id="channel-period-subtitle">Spend volume in selected month</p>
+        </div>
+
+        <div id="channels-container" class="space-y-2 text-xs">
+          <!-- Populated dynamically -->
+        </div>
+      </section>
+
+      <!-- PANEL 5: 50/30/20 BUDGET BURNDOWN (4 COLS) -->
+      <section class="md:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="border-b border-slate-800 pb-2.5 flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span>🎯</span> Panel 5: 50/30/20 Budget Burndown
+              </h2>
+              <p class="text-[11px] text-slate-500 mt-0.5" id="budget-takehome-subtitle">Monthly Take-Home Baseline: ₹92,000</p>
+            </div>
+            <button type="button" id="quick-edit-budget-btn" class="text-[10px] text-indigo-400 hover:text-indigo-300 border border-indigo-900/60 px-1.5 py-0.5 rounded">
+              Edit Limits
+            </button>
+          </div>
+
+          <div class="space-y-3.5 mt-3" id="budget-burndown-container">
+            <!-- Needs Progress -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium text-slate-300" id="budget-needs-label">Needs (Essential ≤ 50%)</span>
+                <span id="budget-needs-val" class="font-mono-num text-slate-300">₹0 / ₹46,000</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="budget-needs-bar" class="bg-indigo-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-500">
+                <span id="budget-needs-pct">0% Consumed</span>
+                <span id="budget-needs-rem" class="text-emerald-400">₹46,000 remaining</span>
+              </div>
+            </div>
+
+            <!-- Wants Progress -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium text-slate-300" id="budget-wants-label">Wants (Discretionary ≤ 30%)</span>
+                <span id="budget-wants-val" class="font-mono-num text-slate-300">₹0 / ₹27,600</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="budget-wants-bar" class="bg-amber-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-500">
+                <span id="budget-wants-pct">0% Consumed</span>
+                <span id="budget-wants-rem" class="text-emerald-400">₹27,600 remaining</span>
+              </div>
+            </div>
+
+            <!-- Savings / Surplus Progress -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs">
+                <span class="font-medium text-slate-300" id="budget-surplus-label">Surplus / Retained (≥ 20%)</span>
+                <span id="budget-surplus-val" class="font-mono-num text-emerald-400 font-bold">₹0 / ₹18,400</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="budget-surplus-bar" class="bg-emerald-500 h-2 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-500">
+                <span id="budget-surplus-pct">0% of Min Target</span>
+                <span class="text-emerald-400 font-semibold">Retention Calculated</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Actual Savings Rate:</span>
+          <span id="actual-savings-rate-label" class="font-bold text-emerald-400 font-mono-num">0%</span>
+        </div>
+      </section>
+
+      <!-- PANEL 6: TAX CEILING SENTRY (4 COLS) -->
+      <section class="md:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3.5 flex flex-col justify-between">
+        <div>
+          <div class="border-b border-slate-800 pb-2.5">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span>🛡️</span> Panel 6: Section 87A Sentry
+              </h2>
+              <span id="tax-status-badge" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">
+                TIGHT BUFFER
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-0.5" id="tax-ceiling-subtitle">New Tax Regime (Sec 115BAC) ₹12,00,000 Zero-Tax Ceiling</p>
+          </div>
+
+          <div class="space-y-3 mt-3">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">Net Taxable Salary:</span>
+                <span id="tax-net-salary-val" class="font-mono-num text-slate-200">₹11,25,000</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-400">Parental FD & Bank Interest:</span>
+                <span id="tax-interest-val" class="font-mono-num text-amber-400 font-semibold">+₹70,100</span>
+              </div>
+              <div class="border-t border-slate-800/80 pt-1.5 flex items-center justify-between text-xs font-bold">
+                <span class="text-slate-300">Projected Taxable Income:</span>
+                <span id="tax-total-val" class="font-mono-num text-white">₹11,95,100</span>
+              </div>
+
+              <!-- Proximity Bar -->
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
+                <div id="tax-buffer-bar" class="bg-amber-500 h-2 rounded-full" style="width: 99.59%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="text-slate-500" id="tax-cap-label">Threshold: ₹12,00,000</span>
+                <span id="tax-buffer-remaining" class="text-amber-400 font-bold font-mono-num">Buffer: ₹4,900</span>
+              </div>
+            </div>
+
+            <!-- Arbitrage Recommendation Box -->
+            <div class="bg-indigo-950/40 p-3 rounded-xl border border-indigo-900/60 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-indigo-300 flex items-center gap-1.5">
+                  <span>💡</span> Arbitrage Migration Sentry
+                </span>
+                <button type="button" id="toggle-arbitrage-btn" class="text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-2 py-0.5 rounded transition-colors">
+                  Apply Strategy
+                </button>
+              </div>
+              <p class="text-[10.5px] text-slate-400 leading-relaxed" id="arbitrage-desc">
+                Migrate the parental deposit into an <strong class="text-indigo-200">Arbitrage Fund (Growth)</strong> to eliminate annual interest on this PAN, unlocking ₹70k+ safety buffer and utilizing the ₹1.25L equity LTCG exemption.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[10px] text-slate-500 flex items-center gap-1.5">
+          <span>⚠️</span>
+          <span>Earnings exceeding zero-tax threshold face steep marginal tax rates.</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ROW: PANELS 7 & 8 (WEEKLY BURN VELOCITY & CASH-DRAG RUNWAY METER) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- PANEL 7: WEEKLY SPEND VELOCITY & BURN-RATE GAUGE (6 COLS) -->
+      <section class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span>⚡</span> Panel 7: Weekly Velocity & Burn-Rate Gauge
+              </h2>
+              <p class="text-[11px] text-slate-500 mt-0.5">Pace telemetry against the monthly living cap</p>
+            </div>
+            <span id="velocity-status-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              ON TRACK
+            </span>
+          </div>
+
+          <div class="space-y-3 mt-3">
+            <!-- Burn Rate Metrics Overview -->
+            <div class="grid grid-cols-2 gap-3 text-center text-xs">
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-500 block uppercase tracking-wider">Current Daily Burn</span>
+                <span id="burn-daily-rate" class="text-base font-bold font-mono-num text-white mt-0.5 block">₹0 / day</span>
+                <span id="burn-days-elapsed" class="text-[9.5px] text-slate-500 block">Based on active month</span>
+              </div>
+              <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-500 block uppercase tracking-wider">Projected Month-End</span>
+                <span id="burn-projected-total" class="text-base font-bold font-mono-num text-indigo-400 mt-0.5 block">₹0</span>
+                <span id="burn-projected-cap" class="text-[9.5px] text-slate-500 block">vs. ₹54,500 Cap</span>
+              </div>
+            </div>
+
+            <!-- 4-Week Tranche Progress Bars -->
+            <div class="space-y-2.5 pt-1" id="burn-weekly-tranches">
+              <!-- Dynamically populated 4 weeks -->
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+          <span>Weekly Living Budget Benchmark:</span>
+          <span id="burn-weekly-target-label" class="font-bold text-slate-200 font-mono-num">~₹13,625 / week</span>
+        </div>
+      </section>
+
+      <!-- PANEL 8: CASH-DRAG & EMERGENCY RUNWAY METER (6 COLS) -->
+      <section class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span>🛡️</span> Panel 8: Cash-Drag & Emergency Runway Meter
+              </h2>
+              <p class="text-[11px] text-slate-500 mt-0.5">Liquid cash longevity vs. inflation drag</p>
+            </div>
+            <span id="runway-tier-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+              HEALTHY BUFFER
+            </span>
+          </div>
+
+          <div class="space-y-3 mt-3">
+            <!-- Runway Hero Stat -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 block uppercase tracking-wider">Spendable Emergency Runway</span>
+                <span id="runway-months-val" class="text-2xl font-black font-mono-num text-white">1.67 <span class="text-sm font-normal text-slate-400">Months</span></span>
+                <span id="runway-spend-subtext" class="text-[10px] text-slate-500 block">Based on ₹54,500/mo Living Cap</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-slate-400 block uppercase tracking-wider">Liquid Cash Floor</span>
+                <span id="runway-liquid-cash" class="text-lg font-bold font-mono-num text-emerald-400">₹90,931</span>
+                <span class="text-[10px] text-slate-500 block">HDFC + Federal Bank</span>
+              </div>
+            </div>
+
+            <!-- Visual 6-Month Runway Bar -->
+            <div class="space-y-1">
+              <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                <div id="runway-progress-bar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 27.8%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[9.5px] text-slate-500">
+                <span>0 Mos (Critical)</span>
+                <span class="text-indigo-400">3.0 Mos (Target Baseline)</span>
+                <span>6.0+ Mos (Cash Drag)</span>
+              </div>
+            </div>
+
+            <!-- Cash Drag & Opportunity Cost Insight Box -->
+            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5" id="cash-drag-box">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                  <span>📉</span> Cash-Drag Sentry
+                </span>
+                <span id="cash-drag-surplus-label" class="font-mono-num text-slate-400 font-semibold">₹0 Idle Surplus</span>
+              </div>
+              <p class="text-[10.5px] text-slate-400 leading-relaxed" id="cash-drag-desc">
+                Current liquid reserves provide healthy operational flexibility without excessive cash drag against CPI inflation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+          <span>Target Emergency Reserve (3 Mos):</span>
+          <span id="runway-target-reserve-label" class="font-bold text-indigo-400 font-mono-num">₹1,63,500</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TRANSACTION LEDGER AUDIT LOG -->
+    <section class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <span>📜</span> Double-Entry Ledger & Audit Log
+          </h2>
+          <p class="text-[11px] text-slate-500 mt-0.5" id="ledger-subtitle">Transactions recorded for selected month</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="flex items-center gap-1.5 text-xs text-slate-400 cursor-pointer bg-slate-950 px-2.5 py-1.5 rounded-lg border border-slate-800">
+            <input type="checkbox" id="ledger-month-lock-cb" checked class="rounded text-indigo-600 focus:ring-0">
+            <span>Lock to Selected Month</span>
+          </label>
+          <select id="ledger-filter-type" class="bg-slate-950 border border-slate-800 text-slate-300 rounded-lg text-xs px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <option value="ALL">All Event Types</option>
+            <option value="DIRECT_EXPENSE">Direct Living Expenses</option>
+            <option value="INTERBANK_TRANSFER">Interbank Transfers</option>
+            <option value="ASSET_ALLOCATION">Asset Reallocations</option>
+            <option value="DEBT_REPAYMENT">CC Debt Settlements</option>
+            <option value="SALARY_INFLOW">Salary Inflows</option>
+          </select>
+          <button id="quick-export-csv-btn" type="button" class="text-xs bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-800 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors">
+            <span>📥</span> Export CSV
+          </button>
+          <span id="ledger-count-pill" class="text-[11px] bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-mono">
+            0 Txns
+          </span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs min-w-[700px]">
+          <thead>
+            <tr class="text-slate-400 border-b border-slate-800 text-[11px]">
+              <th class="pb-2.5 font-semibold">Date</th>
+              <th class="pb-2.5 font-semibold">Classification & Type</th>
+              <th class="pb-2.5 font-semibold">Channel / Instrument</th>
+              <th class="pb-2.5 font-semibold">Description</th>
+              <th class="pb-2.5 font-semibold">Source Account</th>
+              <th class="pb-2.5 font-semibold">Destination Account</th>
+              <th class="pb-2.5 font-semibold text-right">Amount</th>
+              <th class="pb-2.5 font-semibold text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="ledger-tbody" class="divide-y divide-slate-800/60 font-mono-num">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+
+
+  <!-- CREDIT CARD SETTLEMENT PLANNER MODAL -->
+  <div id="cc-settle-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💳</span>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Credit Card Settlement Orchestrator</h3>
+            <p class="text-[11px] text-slate-400">Execute zero-leakage debt repayment with liquidity safeguarding</p>
+          </div>
+        </div>
+        <button id="cc-settle-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <!-- Live Settlement Telemetry Card -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Card Selected:</span>
+          <span id="settle-card-name-label" class="font-bold text-white">Federal Bank Signet</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Current Outstanding Liability:</span>
+          <span id="settle-card-due-label" class="font-bold text-rose-400 font-mono-num text-sm">₹0</span>
+        </div>
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+          <span class="text-slate-400">Recommended Routing:</span>
+          <span id="settle-rec-routing-label" class="text-emerald-400 font-semibold">Federal Bank (UPI Active)</span>
+        </div>
+      </div>
+
+      <form id="cc-settle-form" class="space-y-3.5 text-xs">
+        <input type="hidden" id="settle-target-card" value="CC_SIGNET">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="settle-amount" class="block font-medium text-slate-300 mb-1">Repayment Amount (₹)</label>
+            <input type="number" id="settle-amount" min="1" step="any" required
+              class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+          </div>
+          <div>
+            <label for="settle-date" class="block font-medium text-slate-300 mb-1">Payment Date</label>
+            <input type="date" id="settle-date" required
+              class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="settle-source-bank" class="block font-medium text-slate-300 mb-1">Funding Bank Account</label>
+            <select id="settle-source-bank" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <option value="FEDERAL_SAVINGS">Federal Bank (UPI Active)</option>
+              <option value="HDFC_SALARY">HDFC Bank (Salary Account)</option>
+            </select>
+          </div>
+          <div>
+            <label for="settle-channel" class="block font-medium text-slate-300 mb-1">Payment Channel</label>
+            <select id="settle-channel" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <option value="GPay (Federal Bank UPI)">GPay (Federal Bank UPI)</option>
+              <option value="Paytm (Federal Bank UPI)">Paytm (Federal Bank UPI)</option>
+              <option value="HDFC NetBanking (No UPI)">HDFC NetBanking</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Post-Settlement Residual Liquidity Preview -->
+        <div class="bg-indigo-950/40 p-3 rounded-xl border border-indigo-900/60 flex items-center justify-between text-[11px]">
+          <span class="text-slate-400">Post-Payment Bank Balance:</span>
+          <span id="settle-post-bal-preview" class="font-bold font-mono-num text-emerald-400">₹0</span>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
+          <button type="button" id="cc-settle-cancel-btn" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md flex items-center gap-1.5">
+            <span>⚡ Commit Settlement</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DEDICATED CATEGORY LIMITS MODAL -->
+  <div id="cat-limits-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">✏️</span>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Category Monthly Budget Limits</h3>
+            <p class="text-[11px] text-slate-400">Set individual monthly spending caps for your 10 categories</p>
+          </div>
+        </div>
+        <button id="cat-limits-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <!-- Live Budget Impact Banner -->
+      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+        <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Total Living Cap</span>
+          <span id="modal-total-living-cap" class="text-sm font-bold text-white font-mono-num">₹54,500</span>
+        </div>
+        <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Needs Total</span>
+          <span id="modal-needs-total-cap" class="text-sm font-bold text-indigo-400 font-mono-num">₹39,000</span>
+        </div>
+        <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Wants Total</span>
+          <span id="modal-wants-total-cap" class="text-sm font-bold text-amber-400 font-mono-num">₹15,500</span>
+        </div>
+        <div class="p-2 rounded-lg bg-slate-900/60 border border-slate-800/80">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Retained Surplus</span>
+          <span id="modal-surplus-total-cap" class="text-sm font-bold text-emerald-400 font-mono-num">₹37,500</span>
+        </div>
+      </div>
+
+      <form id="cat-limits-form" class="space-y-3 text-xs">
+        <div class="space-y-2.5" id="cat-limits-inputs-list">
+          <!-- Dynamically populated with all 10 categories -->
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+          <button type="button" id="cat-limits-reset-btn" class="text-rose-400 hover:text-rose-300 font-medium text-xs">
+            Reset to Default ₹54,500 Ratios
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" id="cat-limits-cancel-btn" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md">
+              Save Category Limits
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SETTINGS & BUDGET LIMITS CONFIGURATOR MODAL -->
+  <div id="config-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl shadow-2xl p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">⚙️</span>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Engine Limits & Category Budget Settings</h3>
+            <p class="text-[11px] text-slate-400">Customize salary baseline, credit limits, and per-category budget caps</p>
+          </div>
+        </div>
+        <button id="config-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <form id="config-form" class="space-y-4 text-xs">
+
+        <!-- 1. Monthly Income & Budget Criteria -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <h4 class="font-bold text-indigo-400 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+            <span>🎯</span> 1. Monthly Take-Home & Budget Allocation
+          </h4>
+
+          <div>
+            <label for="cfg-takehome" class="block font-medium text-slate-300 mb-1">Monthly Net Take-Home Salary (₹)</label>
+            <input type="number" id="cfg-takehome" min="1000" step="500" required
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5">
+            <div>
+              <label for="cfg-needs-pct" class="block font-medium text-slate-300 mb-1">Needs Target %</label>
+              <input type="number" id="cfg-needs-pct" min="10" max="90" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <span id="cfg-needs-calc" class="text-[10px] text-slate-500 mt-1 block">Cap: ₹46,000</span>
+            </div>
+            <div>
+              <label for="cfg-wants-pct" class="block font-medium text-slate-300 mb-1">Wants Target %</label>
+              <input type="number" id="cfg-wants-pct" min="5" max="80" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <span id="cfg-wants-calc" class="text-[10px] text-slate-500 mt-1 block">Cap: ₹27,600</span>
+            </div>
+            <div>
+              <label for="cfg-surplus-pct" class="block font-medium text-slate-300 mb-1">Surplus Min %</label>
+              <input type="number" id="cfg-surplus-pct" min="5" max="80" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <span id="cfg-surplus-calc" class="text-[10px] text-emerald-400 mt-1 block">Min: ₹18,400</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Master Category Budget Caps (10 Categories) -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+              <span>📋</span> 2. Individual Category Monthly Budget Caps
+            </h4>
+            <span class="text-[10px] text-slate-400">Total Living Cap: ₹54,500</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="cfg-category-budgets-grid">
+            <!-- Dynamically populated category budget inputs -->
+          </div>
+        </div>
+
+        <!-- 3. Credit Card Limits & Utilization Guardrails -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <h4 class="font-bold text-amber-400 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+            <span>💳</span> 3. Credit Card Limits & CUR Guardrails
+          </h4>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cfg-signet-limit" class="block font-medium text-slate-300 mb-1">Federal Signet Limit (₹)</label>
+              <input type="number" id="cfg-signet-limit" min="1000" step="1000" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label for="cfg-paytm-limit" class="block font-medium text-slate-300 mb-1">Paytm AU RuPay Limit (₹)</label>
+              <input type="number" id="cfg-paytm-limit" min="1000" step="1000" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <div>
+            <label for="cfg-safe-cur" class="block font-medium text-slate-300 mb-1">Safe Utilization Threshold % (Default: 30%)</label>
+            <input type="number" id="cfg-safe-cur" min="10" max="90" required
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- 4. Tax Sentry & Income Thresholds -->
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <h4 class="font-bold text-cyan-400 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+            <span>🛡️</span> 4. Section 115BAC Tax Framework & Parental Interest
+          </h4>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cfg-base-salary" class="block font-medium text-slate-300 mb-1">Annual Gross Salary (₹)</label>
+              <input type="number" id="cfg-base-salary" min="100000" step="10000" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label for="cfg-std-deduction" class="block font-medium text-slate-300 mb-1">Standard Deduction (₹)</label>
+              <input type="number" id="cfg-std-deduction" min="0" step="5000" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="cfg-parental-interest" class="block font-medium text-slate-300 mb-1">Projected Annual Interest (₹)</label>
+              <input type="number" id="cfg-parental-interest" min="0" step="100" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label for="cfg-tax-ceiling" class="block font-medium text-slate-300 mb-1">Zero-Tax Threshold (₹)</label>
+              <input type="number" id="cfg-tax-ceiling" min="500000" step="50000" required
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 font-mono-num focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+          <button type="button" id="cfg-reset-defaults-btn" class="text-rose-400 hover:text-rose-300 font-medium">
+            Reset to PRD Defaults
+          </button>
+          <div class="flex items-center gap-2">
+            <button type="button" id="config-cancel-btn" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md">
+              Save & Apply Settings
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- PWA MOBILE SETUP GUIDE MODAL -->
+  <div id="pwa-guide-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📱</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">How to Install as a Mobile App</h3>
+        </div>
+        <button id="pwa-guide-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs text-slate-300">
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+          <h4 class="font-bold text-slate-100 flex items-center gap-1.5">
+            <span>🍏</span> On iPhone / iPad (Safari):
+          </h4>
+          <ol class="list-decimal list-inside space-y-1 text-slate-400 pl-1 leading-relaxed">
+            <li>Open this app page in <strong>Safari</strong> on your iPhone.</li>
+            <li>Tap the <strong>Share</strong> button (the square icon with an upward arrow) at the bottom.</li>
+            <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
+            <li>Tap <strong>Add</strong> in the top right. It installs directly with its own app icon and runs full-screen without Safari browser bars!</li>
+          </ol>
+        </div>
+
+        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+          <h4 class="font-bold text-slate-100 flex items-center gap-1.5">
+            <span>🤖</span> On Android (Chrome / Brave / Edge):
+          </h4>
+          <ol class="list-decimal list-inside space-y-1 text-slate-400 pl-1 leading-relaxed">
+            <li>Open this page in <strong>Chrome</strong> on your Android phone.</li>
+            <li>Tap the <strong>three dots menu (⋮)</strong> in the top right corner.</li>
+            <li>Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</li>
+            <li>Confirm installation. The app will launch as a standalone application.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button type="button" id="pwa-guide-done-btn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs">
+          Got It
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA & CSV BACKUP/IMPORT MODAL -->
+  <div id="data-hub-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📊</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">CSV & Data Management Hub</h3>
+        </div>
+        <button id="data-hub-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <!-- CSV Export Box -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h4 class="font-bold text-slate-100 flex items-center gap-1.5">
+              <span>📥</span> Export Transactions to CSV
+            </h4>
+            <span class="text-[10px] text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Excel Compatible</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Download your full audit ledger as a comma-separated `.csv` file with date, amount, classification, accounts, and descriptions ready for Excel or Google Sheets.
+          </p>
+          <button type="button" id="modal-export-csv-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <span>Download transactions.csv</span>
+          </button>
+        </div>
+
+        <!-- CSV Import Box -->
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+          <h4 class="font-bold text-slate-100 flex items-center gap-1.5">
+            <span>📤</span> Import Transactions from CSV
+          </h4>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Upload an existing CSV file to append or restore transactions to your ledger.
+          </p>
+          <input type="file" id="csv-file-input" accept=".csv" class="hidden">
+          <button type="button" id="trigger-csv-upload-btn" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+            <span>Choose CSV File to Import</span>
+          </button>
+        </div>
+
+        <!-- System Reset -->
+        <div class="pt-2 flex items-center justify-between text-[11px] text-slate-500">
+          <span>Need to restore default numbers?</span>
+          <button id="reset-btn" type="button" class="text-rose-400 hover:text-rose-300 font-semibold transition-colors">
+            ↺ Reset All to Baseline PRD Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTION ENTRY MODAL -->
+  <div id="txn-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">➕</span>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Log Double-Entry Transaction</h3>
+        </div>
+        <button id="modal-close-btn" type="button" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+      </div>
+
+      <form id="txn-form" class="space-y-3.5 text-xs">
+        <div>
+          <label for="form-txn-type" class="block font-medium text-slate-300 mb-1">Transaction Architecture Type</label>
+          <select id="form-txn-type" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <option value="DIRECT_EXPENSE">DIRECT_EXPENSE (Living Expense Outflow)</option>
+            <option value="INTERBANK_TRANSFER">INTERBANK_TRANSFER (HDFC -> Federal Transfer)</option>
+            <option value="ASSET_ALLOCATION">ASSET_ALLOCATION (PPF, FD Lien, Market Capital)</option>
+            <option value="DEBT_REPAYMENT">DEBT_REPAYMENT (Credit Card Bill Settlement)</option>
+            <option value="SALARY_INFLOW">SALARY_INFLOW (Net Salary Credit)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="form-amount" class="block font-medium text-slate-300 mb-1">Amount (₹)</label>
+            <input type="number" id="form-amount" min="1" step="any" placeholder="e.g. 850" required
+              class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono-num">
+          </div>
+          <div>
+            <label for="form-date" class="block font-medium text-slate-300 mb-1">Date</label>
+            <input type="date" id="form-date" required
+              class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- Dynamic Fields Container -->
+        <div id="dynamic-form-fields" class="space-y-3">
+          <!-- Populated by JS based on txn type -->
+        </div>
+
+        <div>
+          <label for="form-desc" class="block font-medium text-slate-300 mb-1">Description / Memo</label>
+          <input type="text" id="form-desc" placeholder="e.g. Swiggy delivery, Monthly Rent, PPF contribution" required
+            class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
+          <button type="button" id="modal-cancel-btn" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md">
+            Execute & Commit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // 10 MASTER SPEND CATEGORIES (50/30/20 Standard with Default Monthly Budgets & Examples)
+    const MASTER_CATEGORIES = {
+      'Housing & Rent': {
+        name: 'Housing & Rent',
+        bucket: 'NEED_ESSENTIAL',
+        defaultBudget: 22000,
+        icon: '🏠',
+        color: '#6366f1',
+        examples: 'Apartment rent, society maintenance, home repairs, furniture'
+      },
+      'Groceries & Supermarket': {
+        name: 'Groceries & Supermarket',
+        bucket: 'NEED_ESSENTIAL',
+        defaultBudget: 6000,
+        icon: '🛒',
+        color: '#10b981',
+        examples: 'Monthly staples, vegetables, fruits, dairy, bakery, Blinkit/Instamart'
+      },
+      'Utilities & Bills': {
+        name: 'Utilities & Bills',
+        bucket: 'NEED_ESSENTIAL',
+        defaultBudget: 3500,
+        icon: '💡',
+        color: '#06b6d4',
+        examples: 'Electricity (KSEB/TNEB), broadband fiber, mobile recharges, LPG/piped gas'
+      },
+      'Transportation & Fuel': {
+        name: 'Transportation & Fuel',
+        bucket: 'NEED_ESSENTIAL',
+        defaultBudget: 4500,
+        icon: '⛽',
+        color: '#f59e0b',
+        examples: 'Petrol (HPCL/BPCL fuel swipes), Uber/Ola, auto, metro/transit, vehicle service'
+      },
+      'Health & Fitness': {
+        name: 'Health & Fitness',
+        bucket: 'NEED_ESSENTIAL',
+        defaultBudget: 3000,
+        icon: '🩺',
+        color: '#14b8a6',
+        examples: 'Pharmacy & medicines, doctor consultations, supplements/protein, gym'
+      },
+      'Dining & Food Delivery': {
+        name: 'Dining & Food Delivery',
+        bucket: 'WANT_DISCRETIONARY',
+        defaultBudget: 4000,
+        icon: '🍽️',
+        color: '#f43f5e',
+        examples: 'Restaurants, cafes, tea/snacks, Zomato/Swiggy orders, social outings'
+      },
+      'Shopping & Apparel': {
+        name: 'Shopping & Apparel',
+        bucket: 'WANT_DISCRETIONARY',
+        defaultBudget: 4500,
+        icon: '🛍️',
+        color: '#a855f7',
+        examples: 'Workwear, casual clothing, footwear, personal care/grooming, electronics'
+      },
+      'Subscriptions & Tech': {
+        name: 'Subscriptions & Tech',
+        bucket: 'WANT_DISCRETIONARY',
+        defaultBudget: 1500,
+        icon: '💻',
+        color: '#8b5cf6',
+        examples: 'Netflix, Prime, Spotify, cloud storage, software & memberships'
+      },
+      'Entertainment & Social': {
+        name: 'Entertainment & Social',
+        bucket: 'WANT_DISCRETIONARY',
+        defaultBudget: 3000,
+        icon: '🎬',
+        color: '#c084fc',
+        examples: 'Movies, weekend outings, events, hobbies, short trips'
+      },
+      'Miscellaneous & Buffer': {
+        name: 'Miscellaneous & Buffer',
+        bucket: 'WANT_DISCRETIONARY',
+        defaultBudget: 2500,
+        icon: '📦',
+        color: '#94a3b8',
+        examples: 'Unplanned expenses, gifts, household help, emergency petty spends'
+      }
+    };
+
+    // Category Aliases mapping for seamless reconciliation
+    const CATEGORY_MAP = {
+      'House Rent': 'Housing & Rent',
+      'Supermarket & Groceries': 'Groceries & Supermarket',
+      'Electricity & Water Utilities': 'Utilities & Bills',
+      'Internet & Mobile Recharges': 'Utilities & Bills',
+      'Fuel & Fastag (Vehicle)': 'Transportation & Fuel',
+      'Fuel & Commute': 'Transportation & Fuel',
+      'Cabs & Transit (Uber / Auto / Metro)': 'Transportation & Fuel',
+      'Pharmacy & Medicines': 'Health & Fitness',
+      'Fitness & Gym Membership': 'Health & Fitness',
+      'Food Delivery (Swiggy / Zomato)': 'Dining & Food Delivery',
+      'Dining & Restaurants': 'Dining & Food Delivery',
+      'Coffee & Quick Snacks': 'Dining & Food Delivery',
+      'Electronics & Gadgets': 'Subscriptions & Tech',
+      'Streaming & Digital Subscriptions': 'Subscriptions & Tech',
+      'Clothing & Apparel Shopping': 'Shopping & Apparel',
+      'Movies & Outing Events': 'Entertainment & Social',
+      'Travel, Flights & Vacations': 'Entertainment & Social',
+      'Gifting & Family Celebrations': 'Miscellaneous & Buffer',
+      'General Living Outflow': 'Miscellaneous & Buffer'
+    };
+
+    function resolveCategory(cat) {
+      if (MASTER_CATEGORIES[cat]) return cat;
+      return CATEGORY_MAP[cat] || 'Miscellaneous & Buffer';
+    }
+
+    // DEFAULT CONFIGURATION PROFILE
+    const DEFAULT_CONFIG = {
+      takeHomeSalary: 92000,
+      needsPct: 50,
+      wantsPct: 30,
+      surplusPct: 20,
+      signetLimit: 24000,
+      paytmLimit: 90000,
+      safeCurThreshold: 30,
+      baseAnnualSalary: 1200000,
+      standardDeduction: 75000,
+      parentalInterest: 70100,
+      taxCeiling: 1200000,
+      hdfcOpening: 45000,
+      federalOpening: 17500,
+      categoryBudgets: {
+        'Housing & Rent': 22000,
+        'Groceries & Supermarket': 6000,
+        'Utilities & Bills': 3500,
+        'Transportation & Fuel': 4500,
+        'Health & Fitness': 3000,
+        'Dining & Food Delivery': 4000,
+        'Shopping & Apparel': 4500,
+        'Subscriptions & Tech': 1500,
+        'Entertainment & Social': 3000,
+        'Miscellaneous & Buffer': 2500
+      }
+    };
+
+    // CORE SYSTEM STATE
+    const INITIAL_STATE = {
+      selectedMonth: '2026-10',
+      categoryViewFilter: 'ALL',
+      config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
+      arbitrageApplied: false,
+      transactions: [
+        // --- OCTOBER 2026 (CURRENT ACTIVE MONTH) ---
+        {
+          id: 'tx-oct-1',
+          date: '2026-10-01',
+          type: 'SALARY_INFLOW',
+          source: null,
+          destination: 'HDFC_SALARY',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Monthly Net Take-Home',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 92000,
+          desc: 'October Net Salary Credit'
+        },
+        {
+          id: 'tx-oct-2',
+          date: '2026-10-02',
+          type: 'DIRECT_EXPENSE',
+          source: 'HDFC_SALARY',
+          destination: null,
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Housing & Rent',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 22000,
+          desc: 'Monthly House Rent via NetBanking'
+        },
+        {
+          id: 'tx-oct-3',
+          date: '2026-10-02',
+          type: 'INTERBANK_TRANSFER',
+          source: 'HDFC_SALARY',
+          destination: 'FEDERAL_SAVINGS',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Operating Liquidity Allocation',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 35000,
+          desc: 'Monthly Operational Transfer to Federal Bank'
+        },
+        {
+          id: 'tx-oct-4',
+          date: '2026-10-03',
+          type: 'ASSET_ALLOCATION',
+          source: 'FEDERAL_SAVINGS',
+          destination: 'FD_SIGNET_LIEN',
+          channel: 'Federal Bank App',
+          category: 'Collateral Deposit Lien',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 30000,
+          desc: '15-Month FD Pledged for Signet Credit Card (7.0% p.a.)'
+        },
+        {
+          id: 'tx-oct-5',
+          date: '2026-10-04',
+          type: 'ASSET_ALLOCATION',
+          source: 'HDFC_SALARY',
+          destination: 'HDFC_PPF',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Statutory EEE Wealth',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 500,
+          desc: 'Baseline Seed Deposit into HDFC PPF'
+        },
+        {
+          id: 'tx-oct-6',
+          date: '2026-10-06',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Groceries & Supermarket',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 3840,
+          desc: 'Supermarket weekly essentials & Blinkit/Instamart'
+        },
+        {
+          id: 'tx-oct-7',
+          date: '2026-10-08',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Utilities & Bills',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 1199,
+          desc: 'Airtel Fiber broadband & mobile recharge'
+        },
+        {
+          id: 'tx-oct-8',
+          date: '2026-10-10',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm (Paytm AU RuPay CC UPI)',
+          category: 'Dining & Food Delivery',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 850,
+          desc: 'Zomato/Swiggy weekend dinner order'
+        },
+        {
+          id: 'tx-oct-9',
+          date: '2026-10-14',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_SIGNET',
+          destination: null,
+          channel: 'Federal Bank Signet CC (POS / Fuel)',
+          category: 'Transportation & Fuel',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 2500,
+          desc: 'HPCL petrol swipe (Surcharge Waiver)'
+        },
+        {
+          id: 'tx-oct-10',
+          date: '2026-10-16',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Health & Fitness',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 680,
+          desc: 'Pharmacy medicines & supplements'
+        },
+        {
+          id: 'tx-oct-11',
+          date: '2026-10-18',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm AU CC (POS / Online)',
+          category: 'Subscriptions & Tech',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 649,
+          desc: 'Netflix & Spotify digital memberships'
+        },
+        {
+          id: 'tx-oct-12',
+          date: '2026-10-22',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm AU CC (POS / Online)',
+          category: 'Shopping & Apparel',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 2850,
+          desc: 'Workwear apparel & footwear'
+        },
+        {
+          id: 'tx-oct-13',
+          date: '2026-10-24',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm AU CC (POS / Online)',
+          category: 'Entertainment & Social',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 1200,
+          desc: 'Weekend movies & outings'
+        },
+        {
+          id: 'tx-oct-14',
+          date: '2026-10-25',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Miscellaneous & Buffer',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 450,
+          desc: 'Household help & petty emergency buffer'
+        },
+        {
+          id: 'tx-oct-15',
+          date: '2026-10-26',
+          type: 'DEBT_REPAYMENT',
+          source: 'FEDERAL_SAVINGS',
+          destination: 'CC_SIGNET',
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Card Bill Payment',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 2500,
+          desc: 'Full Statement Settlement for Signet Card'
+        },
+        {
+          id: 'tx-oct-16',
+          date: '2026-10-27',
+          type: 'DEBT_REPAYMENT',
+          source: 'FEDERAL_SAVINGS',
+          destination: 'CC_PAYTM_AU',
+          channel: 'Paytm (Federal Bank UPI)',
+          category: 'Card Bill Payment',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 1069,
+          desc: 'Partial Statement Repayment for Paytm AU CC'
+        },
+
+        // --- SEPTEMBER 2026 ---
+        {
+          id: 'tx-sep-1',
+          date: '2026-09-01',
+          type: 'SALARY_INFLOW',
+          source: null,
+          destination: 'HDFC_SALARY',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Monthly Net Take-Home',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 92000,
+          desc: 'September Net Salary Credit'
+        },
+        {
+          id: 'tx-sep-2',
+          date: '2026-09-02',
+          type: 'DIRECT_EXPENSE',
+          source: 'HDFC_SALARY',
+          destination: null,
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Housing & Rent',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 22000,
+          desc: 'September House Rent'
+        },
+        {
+          id: 'tx-sep-3',
+          date: '2026-09-03',
+          type: 'INTERBANK_TRANSFER',
+          source: 'HDFC_SALARY',
+          destination: 'FEDERAL_SAVINGS',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Operating Liquidity Allocation',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 35000,
+          desc: 'Monthly Operational Transfer to Federal Bank'
+        },
+        {
+          id: 'tx-sep-4',
+          date: '2026-09-08',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Groceries & Supermarket',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 4120,
+          desc: 'Monthly Groceries via GPay UPI'
+        },
+        {
+          id: 'tx-sep-5',
+          date: '2026-09-12',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Utilities & Bills',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 2150,
+          desc: 'KSEB Electricity & water utility bill'
+        },
+        {
+          id: 'tx-sep-6',
+          date: '2026-09-18',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm (Paytm AU RuPay CC UPI)',
+          category: 'Dining & Food Delivery',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 1650,
+          desc: 'Weekend Family Dining'
+        },
+        {
+          id: 'tx-sep-7',
+          date: '2026-09-22',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_SIGNET',
+          destination: null,
+          channel: 'Federal Bank Signet CC (POS / Fuel)',
+          category: 'Transportation & Fuel',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 2200,
+          desc: 'Highway Petrol & Fastag'
+        },
+        {
+          id: 'tx-sep-8',
+          date: '2026-09-25',
+          type: 'DEBT_REPAYMENT',
+          source: 'FEDERAL_SAVINGS',
+          destination: 'CC_PAYTM_AU',
+          channel: 'Paytm (Federal Bank UPI)',
+          category: 'Card Bill Payment',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 1650,
+          desc: 'Full Statement Settlement for Paytm AU Card'
+        },
+
+        // --- AUGUST 2026 ---
+        {
+          id: 'tx-aug-1',
+          date: '2026-08-01',
+          type: 'SALARY_INFLOW',
+          source: null,
+          destination: 'HDFC_SALARY',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Monthly Net Take-Home',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 92000,
+          desc: 'August Net Salary Credit'
+        },
+        {
+          id: 'tx-aug-2',
+          date: '2026-08-02',
+          type: 'DIRECT_EXPENSE',
+          source: 'HDFC_SALARY',
+          destination: null,
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Housing & Rent',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 22000,
+          desc: 'August House Rent'
+        },
+        {
+          id: 'tx-aug-3',
+          date: '2026-08-03',
+          type: 'INTERBANK_TRANSFER',
+          source: 'HDFC_SALARY',
+          destination: 'FEDERAL_SAVINGS',
+          channel: 'HDFC NetBanking (No UPI)',
+          category: 'Operating Liquidity Allocation',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 35000,
+          desc: 'Monthly Operational Transfer to Federal Bank'
+        },
+        {
+          id: 'tx-aug-4',
+          date: '2026-08-12',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Utilities & Bills',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 2850,
+          desc: 'Electricity & Gas utilities'
+        },
+        {
+          id: 'tx-aug-5',
+          date: '2026-08-15',
+          type: 'DIRECT_EXPENSE',
+          source: 'FEDERAL_SAVINGS',
+          destination: null,
+          channel: 'GPay (Federal Bank UPI)',
+          category: 'Groceries & Supermarket',
+          budgetBucket: 'NEED_ESSENTIAL',
+          amount: 3950,
+          desc: 'Supermarket essentials'
+        },
+        {
+          id: 'tx-aug-6',
+          date: '2026-08-20',
+          type: 'DIRECT_EXPENSE',
+          source: 'CC_PAYTM_AU',
+          destination: null,
+          channel: 'Paytm AU CC (POS / Online)',
+          category: 'Shopping & Apparel',
+          budgetBucket: 'WANT_DISCRETIONARY',
+          amount: 4800,
+          desc: 'Festive Season Apparel'
+        },
+        {
+          id: 'tx-aug-7',
+          date: '2026-08-26',
+          type: 'DEBT_REPAYMENT',
+          source: 'FEDERAL_SAVINGS',
+          destination: 'CC_PAYTM_AU',
+          channel: 'Paytm (Federal Bank UPI)',
+          category: 'Card Bill Payment',
+          budgetBucket: 'NOT_APPLICABLE',
+          amount: 4800,
+          desc: 'Full Statement Settlement for Paytm AU Card'
+        }
+      ]
+    };
+
+    // Working state
+    let appState = JSON.parse(JSON.stringify(INITIAL_STATE));
+
+    // Try reading localStorage if exists
+    try {
+      const saved = localStorage.getItem('wealth_telemetry_state_v8');
+      if (saved) {
+        appState = JSON.parse(saved);
+        if (!appState.config) appState.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        if (!appState.config.categoryBudgets) appState.config.categoryBudgets = JSON.parse(JSON.stringify(DEFAULT_CONFIG.categoryBudgets));
+        if (!appState.selectedMonth) appState.selectedMonth = '2026-10';
+        if (!appState.categoryViewFilter) appState.categoryViewFilter = 'ALL';
+      }
+    } catch (e) {}
+
+    function saveState() {
+      try {
+        localStorage.setItem('wealth_telemetry_state_v8', JSON.stringify(appState));
+      } catch (e) {}
+    }
+
+    // Number format helper
+    function fmtINR(val) {
+      const num = Number(val) || 0;
+      return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    }
+
+    // Toast helper
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toast-message');
+    const toastIcon = document.getElementById('toast-icon');
+    const toastClose = document.getElementById('toast-close');
+    let toastTimer;
+
+    function showToast(msg, isSuccess = true) {
+      toastMsg.textContent = msg;
+      toastIcon.textContent = isSuccess ? '✓' : '⚠️';
+      toastIcon.className = isSuccess ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4000);
+    }
+    toastClose.addEventListener('click', () => toast.classList.add('hidden'));
+
+    // CORE TELEMETRY CALCULATION ENGINE
+    function computeEngine() {
+      const cfg = appState.config;
+      const selMonth = appState.selectedMonth;
+
+      const sortedTxs = [...appState.transactions].sort((a, b) => a.date.localeCompare(b.date));
+
+      let priorTxs = [];
+      let currentPeriodTxs = [];
+
+      if (selMonth === 'ALL') {
+        currentPeriodTxs = sortedTxs;
+      } else {
+        priorTxs = sortedTxs.filter(t => t.date.substring(0, 7) < selMonth);
+        currentPeriodTxs = sortedTxs.filter(t => t.date.substring(0, 7) === selMonth);
+      }
+
+      // 1. Bank Reconciliation
+      const bankStats = {
+        HDFC_SALARY: { opening: cfg.hdfcOpening, inflows: 0, outflows: 0, assetAlloc: 0, ccPay: 0, current: cfg.hdfcOpening },
+        FEDERAL_SAVINGS: { opening: cfg.federalOpening, inflows: 0, outflows: 0, assetAlloc: 0, ccPay: 0, current: cfg.federalOpening }
+      };
+
+      priorTxs.forEach(tx => {
+        const amt = Number(tx.amount);
+        switch (tx.type) {
+          case 'SALARY_INFLOW':
+            if (tx.destination === 'HDFC_SALARY') bankStats.HDFC_SALARY.opening += amt;
+            break;
+          case 'DIRECT_EXPENSE':
+            if (tx.source === 'HDFC_SALARY') bankStats.HDFC_SALARY.opening -= amt;
+            else if (tx.source === 'FEDERAL_SAVINGS') bankStats.FEDERAL_SAVINGS.opening -= amt;
+            break;
+          case 'INTERBANK_TRANSFER':
+            if (tx.source === 'HDFC_SALARY' && tx.destination === 'FEDERAL_SAVINGS') {
+              bankStats.HDFC_SALARY.opening -= amt;
+              bankStats.FEDERAL_SAVINGS.opening += amt;
+            }
+            break;
+          case 'ASSET_ALLOCATION':
+            if (tx.source === 'HDFC_SALARY') bankStats.HDFC_SALARY.opening -= amt;
+            else if (tx.source === 'FEDERAL_SAVINGS') bankStats.FEDERAL_SAVINGS.opening -= amt;
+            break;
+          case 'DEBT_REPAYMENT':
+            if (tx.source === 'HDFC_SALARY') bankStats.HDFC_SALARY.opening -= amt;
+            else if (tx.source === 'FEDERAL_SAVINGS') bankStats.FEDERAL_SAVINGS.opening -= amt;
+            break;
+        }
+      });
+
+      bankStats.HDFC_SALARY.current = bankStats.HDFC_SALARY.opening;
+      bankStats.FEDERAL_SAVINGS.current = bankStats.FEDERAL_SAVINGS.opening;
+
+      // 2. Asset Accounts
+      const assets = {
+        FD_SIGNET_LIEN: 30000,
+        HDFC_PPF: 500,
+        MARKET_CAPITAL: 0,
+        EPF_RETIREMENT: 0
+      };
+
+      // 3. Credit Card Outstandings
+      const cardStats = {
+        CC_SIGNET: {
+          name: 'Federal Bank Signet (Secured)',
+          limit: cfg.signetLimit,
+          safeLimit: Math.round(cfg.signetLimit * (cfg.safeCurThreshold / 100)),
+          charges: 0,
+          payments: 0,
+          outstanding: 0,
+          cur: 0
+        },
+        CC_PAYTM_AU: {
+          name: 'Paytm AU RuPay (Unsecured)',
+          limit: cfg.paytmLimit,
+          safeLimit: Math.round(cfg.paytmLimit * (cfg.safeCurThreshold / 100)),
+          charges: 0,
+          payments: 0,
+          outstanding: 0,
+          cur: 0
+        }
+      };
+
+      // 4. Period Budget, Channels, & 10 Master Categories Breakdown
+      const budget = {
+        needs: 0,
+        wants: 0,
+        totalLivingExpenses: 0,
+        periodInflows: 0
+      };
+
+      // Initialize all 10 Master Categories
+      const categoryBreakdown = {};
+      Object.keys(MASTER_CATEGORIES).forEach(catKey => {
+        const meta = MASTER_CATEGORIES[catKey];
+        categoryBreakdown[catKey] = {
+          name: catKey,
+          total: 0,
+          count: 0,
+          bucket: meta.bucket,
+          budgetCap: cfg.categoryBudgets[catKey] || meta.defaultBudget,
+          icon: meta.icon,
+          color: meta.color,
+          examples: meta.examples
+        };
+      });
+
+      const channels = {
+        'GPay (Federal Bank UPI)': { spend: 0, count: 0 },
+        'Paytm (Federal Bank UPI)': { spend: 0, count: 0 },
+        'Paytm (Paytm AU RuPay CC UPI)': { spend: 0, count: 0 },
+        'Paytm AU CC (POS / Online)': { spend: 0, count: 0 },
+        'Federal Bank Signet CC (POS / Fuel)': { spend: 0, count: 0 },
+        'HDFC NetBanking (No UPI)': { spend: 0, count: 0 }
+      };
+
+      currentPeriodTxs.forEach(tx => {
+        const amt = Number(tx.amount);
+
+        if (channels[tx.channel]) {
+          channels[tx.channel].count += 1;
+          if (tx.type === 'DIRECT_EXPENSE' || tx.type === 'DEBT_REPAYMENT') {
+            channels[tx.channel].spend += amt;
+          }
+        }
+
+        switch (tx.type) {
+          case 'SALARY_INFLOW':
+            budget.periodInflows += amt;
+            if (tx.destination === 'HDFC_SALARY') {
+              bankStats.HDFC_SALARY.inflows += amt;
+              bankStats.HDFC_SALARY.current += amt;
+            }
+            break;
+
+          case 'DIRECT_EXPENSE':
+            budget.totalLivingExpenses += amt;
+            if (tx.budgetBucket === 'NEED_ESSENTIAL') budget.needs += amt;
+            if (tx.budgetBucket === 'WANT_DISCRETIONARY') budget.wants += amt;
+
+            // Map to Master Category
+            const resolvedCat = resolveCategory(tx.category);
+            if (categoryBreakdown[resolvedCat]) {
+              categoryBreakdown[resolvedCat].total += amt;
+              categoryBreakdown[resolvedCat].count += 1;
+            }
+
+            if (tx.source === 'HDFC_SALARY') {
+              bankStats.HDFC_SALARY.outflows += amt;
+              bankStats.HDFC_SALARY.current -= amt;
+            } else if (tx.source === 'FEDERAL_SAVINGS') {
+              bankStats.FEDERAL_SAVINGS.outflows += amt;
+              bankStats.FEDERAL_SAVINGS.current -= amt;
+            } else if (cardStats[tx.source]) {
+              cardStats[tx.source].charges += amt;
+              cardStats[tx.source].outstanding += amt;
+            }
+            break;
+
+          case 'INTERBANK_TRANSFER':
+            if (tx.source === 'HDFC_SALARY' && tx.destination === 'FEDERAL_SAVINGS') {
+              bankStats.HDFC_SALARY.assetAlloc += amt;
+              bankStats.HDFC_SALARY.current -= amt;
+              bankStats.FEDERAL_SAVINGS.inflows += amt;
+              bankStats.FEDERAL_SAVINGS.current += amt;
+            }
+            break;
+
+          case 'ASSET_ALLOCATION':
+            if (tx.source === 'HDFC_SALARY') {
+              bankStats.HDFC_SALARY.assetAlloc += amt;
+              bankStats.HDFC_SALARY.current -= amt;
+            } else if (tx.source === 'FEDERAL_SAVINGS') {
+              bankStats.FEDERAL_SAVINGS.assetAlloc += amt;
+              bankStats.FEDERAL_SAVINGS.current -= amt;
+            }
+            if (assets[tx.destination] !== undefined) {
+              assets[tx.destination] += amt;
+            }
+            break;
+
+          case 'DEBT_REPAYMENT':
+            if (tx.source === 'HDFC_SALARY') {
+              bankStats.HDFC_SALARY.ccPay += amt;
+              bankStats.HDFC_SALARY.current -= amt;
+            } else if (tx.source === 'FEDERAL_SAVINGS') {
+              bankStats.FEDERAL_SAVINGS.ccPay += amt;
+              bankStats.FEDERAL_SAVINGS.current -= amt;
+            }
+            if (cardStats[tx.destination]) {
+              cardStats[tx.destination].payments += amt;
+              cardStats[tx.destination].outstanding = Math.max(0, cardStats[tx.destination].outstanding - amt);
+            }
+            break;
+        }
+      });
+
+      // Calculate CURs
+      Object.keys(cardStats).forEach(key => {
+        const c = cardStats[key];
+        c.cur = Math.round((c.outstanding / c.limit) * 1000) / 10;
+      });
+
+      const totalCCDue = cardStats.CC_SIGNET.outstanding + cardStats.CC_PAYTM_AU.outstanding;
+      const combinedLimit = cardStats.CC_SIGNET.limit + cardStats.CC_PAYTM_AU.limit;
+      const portfolioCUR = Math.round((totalCCDue / combinedLimit) * 1000) / 10;
+      const portfolioSafeCap = Math.round(combinedLimit * (cfg.safeCurThreshold / 100));
+
+      const totalSpendable = bankStats.HDFC_SALARY.current + bankStats.FEDERAL_SAVINGS.current;
+      const totalNetWorth = totalSpendable + assets.FD_SIGNET_LIEN + assets.HDFC_PPF + assets.MARKET_CAPITAL - totalCCDue;
+
+      // Tax Sentry
+      const netTaxableSalary = cfg.baseAnnualSalary - cfg.standardDeduction;
+      let nonSalaryInterest = cfg.parentalInterest;
+      if (appState.arbitrageApplied) {
+        nonSalaryInterest = 5100;
+      }
+      const totalTaxableIncome = netTaxableSalary + nonSalaryInterest;
+      const taxBuffer = cfg.taxCeiling - totalTaxableIncome;
+
+      // Sort categories: Active spenders first (descending), then unspent by budget cap descending
+      const sortedCategories = Object.values(categoryBreakdown).sort((a, b) => {
+        if (b.total !== a.total) return b.total - a.total;
+        return b.budgetCap - a.budgetCap;
+      });
+
+      return {
+        cfg,
+        selMonth,
+        currentPeriodTxs,
+        bankStats,
+        assets,
+        cardStats,
+        totalCCDue,
+        combinedLimit,
+        portfolioCUR,
+        portfolioSafeCap,
+        totalSpendable,
+        totalNetWorth,
+        budget,
+        categoryBreakdown: sortedCategories,
+        channels,
+        tax: {
+          netTaxableSalary,
+          nonSalaryInterest,
+          totalTaxableIncome,
+          taxBuffer
+        }
+      };
+    }
+
+    // RENDER UI FROM ENGINE
+    function renderApp() {
+      const data = computeEngine();
+      const cfg = data.cfg;
+
+      // 0. Update Month Selector Bar
+      const monthNames = {
+        '2026-10': 'October 2026',
+        '2026-09': 'September 2026',
+        '2026-08': 'August 2026',
+        'ALL': 'All Time / Cumulative View'
+      };
+      const activeMonthLabel = monthNames[data.selMonth] || data.selMonth;
+      document.getElementById('period-outflows-label').textContent = fmtINR(data.budget.totalLivingExpenses);
+      document.getElementById('period-inflows-label').textContent = fmtINR(data.budget.periodInflows);
+      document.getElementById('waterfall-period-subtitle').textContent = `Reconciliation for ${activeMonthLabel} with strict double-entry isolation`;
+      document.getElementById('channel-period-subtitle').textContent = `Spend volume in ${activeMonthLabel}`;
+      document.getElementById('ledger-subtitle').textContent = `Viewing transactions for ${activeMonthLabel}`;
+      document.getElementById('category-chart-subtitle').textContent = `Master 10-category variance tracking for ${activeMonthLabel}`;
+      document.getElementById('cat-total-spend-badge').textContent = fmtINR(data.budget.totalLivingExpenses);
+
+      // 1. Executive Telemetry Banner
+      document.getElementById('kpi-net-worth').textContent = fmtINR(data.totalNetWorth);
+      document.getElementById('kpi-liquid-cash').textContent = fmtINR(data.totalSpendable);
+      document.getElementById('kpi-hdfc-bal').textContent = fmtINR(data.bankStats.HDFC_SALARY.current);
+      document.getElementById('kpi-federal-bal').textContent = fmtINR(data.bankStats.FEDERAL_SAVINGS.current);
+      document.getElementById('kpi-cc-due').textContent = fmtINR(data.totalCCDue);
+      document.getElementById('portfolio-cur-badge').textContent = `CUR ${data.portfolioCUR}%`;
+      document.getElementById('portfolio-safe-cap-label').textContent = `Combined Cap: ${fmtINR(data.portfolioSafeCap)}`;
+
+      // 2. Panel 1: Bank Reconciliation Waterfall
+      const waterfallTbody = document.getElementById('waterfall-tbody');
+      waterfallTbody.innerHTML = `
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="py-2.5 font-medium text-slate-200">
+            HDFC Salary A/C <span class="text-[9px] text-slate-400">(No UPI)</span>
+          </td>
+          <td class="py-2.5 text-right text-slate-400">${fmtINR(data.bankStats.HDFC_SALARY.opening)}</td>
+          <td class="py-2.5 text-right text-emerald-400">+${fmtINR(data.bankStats.HDFC_SALARY.inflows)}</td>
+          <td class="py-2.5 text-right text-rose-400">-${fmtINR(data.bankStats.HDFC_SALARY.outflows)}</td>
+          <td class="py-2.5 text-right text-indigo-400">-${fmtINR(data.bankStats.HDFC_SALARY.assetAlloc)}</td>
+          <td class="py-2.5 text-right text-amber-400">-${fmtINR(data.bankStats.HDFC_SALARY.ccPay)}</td>
+          <td class="py-2.5 text-right font-bold text-white">${fmtINR(data.bankStats.HDFC_SALARY.current)}</td>
+        </tr>
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="py-2.5 font-medium text-slate-200">
+            Federal Savings <span class="text-[9px] text-emerald-400">(UPI Active)</span>
+          </td>
+          <td class="py-2.5 text-right text-slate-400">${fmtINR(data.bankStats.FEDERAL_SAVINGS.opening)}</td>
+          <td class="py-2.5 text-right text-emerald-400">+${fmtINR(data.bankStats.FEDERAL_SAVINGS.inflows)}</td>
+          <td class="py-2.5 text-right text-rose-400">-${fmtINR(data.bankStats.FEDERAL_SAVINGS.outflows)}</td>
+          <td class="py-2.5 text-right text-indigo-400">-${fmtINR(data.bankStats.FEDERAL_SAVINGS.assetAlloc)}</td>
+          <td class="py-2.5 text-right text-amber-400">-${fmtINR(data.bankStats.FEDERAL_SAVINGS.ccPay)}</td>
+          <td class="py-2.5 text-right font-bold text-white">${fmtINR(data.bankStats.FEDERAL_SAVINGS.current)}</td>
+        </tr>
+      `;
+
+      // Footer
+      const totalOpening = data.bankStats.HDFC_SALARY.opening + data.bankStats.FEDERAL_SAVINGS.opening;
+      const totalInflows = data.bankStats.HDFC_SALARY.inflows + data.bankStats.FEDERAL_SAVINGS.inflows;
+      const totalOutflows = data.bankStats.HDFC_SALARY.outflows + data.bankStats.FEDERAL_SAVINGS.outflows;
+      const totalAssetAlloc = data.bankStats.HDFC_SALARY.assetAlloc + data.bankStats.FEDERAL_SAVINGS.assetAlloc;
+      const totalCCPay = data.bankStats.HDFC_SALARY.ccPay + data.bankStats.FEDERAL_SAVINGS.ccPay;
+
+      document.getElementById('foot-opening').textContent = fmtINR(totalOpening);
+      document.getElementById('foot-inflows').textContent = `+${fmtINR(totalInflows)}`;
+      document.getElementById('foot-outflows').textContent = `-${fmtINR(totalOutflows)}`;
+      document.getElementById('foot-assets').textContent = `-${fmtINR(totalAssetAlloc)}`;
+      document.getElementById('foot-ccpay').textContent = `-${fmtINR(totalCCPay)}`;
+      document.getElementById('foot-spendable').textContent = fmtINR(data.totalSpendable);
+
+      // 3. Panel 2: Credit Card Telemetry & CUR Engine
+      document.getElementById('cur-guardrail-subtitle').textContent = `${cfg.safeCurThreshold}% Safe Utilization Guardrail (Individual & Aggregate)`;
+      const ccCardsContainer = document.getElementById('cc-cards-container');
+      const cardsHtml = Object.keys(data.cardStats).map(key => {
+        const c = data.cardStats[key];
+        const isAmber = c.cur > cfg.safeCurThreshold;
+        const curColor = isAmber ? 'text-amber-400' : 'text-emerald-400';
+        const barColor = isAmber ? 'bg-amber-500' : 'bg-emerald-500';
+        const badgeBg = isAmber ? 'bg-amber-950 text-amber-300 border-amber-800 pulse-amber' : 'bg-slate-800 text-slate-300 border-slate-700';
+
+        return `
+          <div class="bg-slate-950 p-3.5 rounded-xl border ${isAmber ? 'border-amber-800/80' : 'border-slate-800'} space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-xs font-semibold text-slate-200">${c.name}</h4>
+                <span class="text-[10px] text-slate-500">${key === 'CC_SIGNET' ? 'Backed by ₹30k FD Lien' : 'RuPay UPI QR Linkage'}</span>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${badgeBg}">
+                CUR: ${c.cur}%
+              </span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center text-[10px] bg-slate-900/60 p-2 rounded-lg font-mono-num">
+              <div>
+                <span class="text-slate-500 block">Credit Limit</span>
+                <span class="text-slate-200 font-bold">${fmtINR(c.limit)}</span>
+              </div>
+              <div>
+                <span class="text-slate-500 block">Period Due</span>
+                <span class="font-bold ${curColor}">${fmtINR(c.outstanding)}</span>
+              </div>
+              <div>
+                <span class="text-slate-500 block">${cfg.safeCurThreshold}% Safe Cap</span>
+                <span class="text-slate-400">${fmtINR(c.safeLimit)}</span>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="${barColor} h-1.5 rounded-full transition-all duration-300" style="width: ${Math.min(100, c.cur)}%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[9px] text-slate-500">
+                <span>Available: ${fmtINR(c.limit - c.outstanding)}</span>
+                <span>${isAmber ? `⚠️ Warning: Exceeds ${cfg.safeCurThreshold}% safe ceiling` : '✓ Bureau Safe (<30% CUR)'}</span>
+              </div>
+            </div>
+
+            <!-- Settlement & Statement Schedule Radar -->
+            <div class="pt-2 border-t border-slate-900 grid grid-cols-2 gap-2 text-[10px]">
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800/80">
+                <span class="text-slate-500 block text-[9px] uppercase tracking-wider">Statement Date</span>
+                <span class="font-bold text-slate-200">${key === 'CC_SIGNET' ? '18th of month' : '22nd of month'}</span>
+                <span class="text-[9px] text-slate-500 block">${key === 'CC_SIGNET' ? 'Due: 6th of next mo' : 'Due: 12th of next mo'}</span>
+              </div>
+              <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800/80 flex flex-col justify-between">
+                <span class="text-slate-500 block text-[9px] uppercase tracking-wider">Settlement Routing</span>
+                <span class="font-bold text-indigo-400 truncate">${data.bankStats.FEDERAL_SAVINGS.current >= (c.outstanding + 5000) ? 'Federal (UPI)' : 'HDFC NetBanking'}</span>
+                <span class="text-[9px] text-slate-400 block">${c.outstanding > 0 ? (data.bankStats.FEDERAL_SAVINGS.current >= (c.outstanding + 5000) ? 'Liquidity Floor Safe' : 'Preserves Federal') : 'Zero Due'}</span>
+              </div>
+            </div>
+
+            <!-- Pre-Statement Paydown Advisory & Action -->
+            <div class="flex items-center justify-between pt-1">
+              <div class="text-[9.5px]">
+                ${c.outstanding > c.safeLimit
+                  ? `<span class="text-amber-400 font-semibold flex items-center gap-1"><span>⚠️</span> Pre-pay ${fmtINR(c.outstanding - c.safeLimit)} before statement</span>`
+                  : (c.outstanding > 0 ? `<span class="text-emerald-400 font-medium">✓ Safe for credit bureau reporting</span>` : `<span class="text-slate-500">✓ Balance fully settled</span>`)}
+              </div>
+              ${c.outstanding > 0 ? `
+                <button type="button" data-settle-card="${key}" data-card-due="${c.outstanding}" data-card-name="${c.name}"
+                        class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-indigo-600 hover:bg-indigo-500 text-white flex items-center gap-1 shadow-sm transition-colors">
+                  <span>⚡ Settle Bill</span>
+                </button>
+              ` : `
+                <span class="text-[10px] text-slate-500 italic">No Balance Due</span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      ccCardsContainer.innerHTML = cardsHtml;
+
+      // Aggregate CUR updates
+      const aggBar = document.getElementById('aggregate-cur-bar');
+      const aggText = document.getElementById('aggregate-cur-text');
+      const aggStatus = document.getElementById('aggregate-status-pill');
+
+      aggText.textContent = `${fmtINR(data.totalCCDue)} / ${fmtINR(data.combinedLimit)} (${data.portfolioCUR}%)`;
+      aggBar.style.width = `${Math.min(100, data.portfolioCUR)}%`;
+      document.getElementById('agg-safe-cap-label').textContent = `Safe Cap: ${cfg.safeCurThreshold}% (${fmtINR(data.portfolioSafeCap)})`;
+      document.getElementById('agg-total-limit-label').textContent = `100% (${fmtINR(data.combinedLimit)})`;
+
+      if (data.portfolioCUR > cfg.safeCurThreshold) {
+        aggBar.className = 'bg-amber-500 h-2 rounded-full';
+        aggStatus.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 pulse-amber';
+        aggStatus.textContent = `ALERT (>${cfg.safeCurThreshold}% Safe Cap)`;
+      } else {
+        aggBar.className = 'bg-emerald-500 h-2 rounded-full';
+        aggStatus.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+        aggStatus.textContent = `OPTIMAL (${data.portfolioCUR}%)`;
+      }
+
+      // 4. Panel 3: 10 MASTER SPEND CATEGORIES & BUDGET VARIANCE
+      const totalExpense = data.budget.totalLivingExpenses;
+      const donutGroup = document.getElementById('donut-segments-group');
+      const categoryBarsContainer = document.getElementById('category-bars-container');
+      const donutCenterVal = document.getElementById('donut-center-val');
+      const donutCenterLabel = document.getElementById('donut-center-label');
+      const donutCenterPct = document.getElementById('donut-center-pct');
+
+      // Filter categories based on view filter
+      let displayedCats = data.categoryBreakdown;
+      if (appState.categoryViewFilter === 'NEED_ESSENTIAL') {
+        displayedCats = data.categoryBreakdown.filter(c => c.bucket === 'NEED_ESSENTIAL');
+      } else if (appState.categoryViewFilter === 'WANT_DISCRETIONARY') {
+        displayedCats = data.categoryBreakdown.filter(c => c.bucket === 'WANT_DISCRETIONARY');
+      }
+
+      const displayedTotal = displayedCats.reduce((sum, c) => sum + c.total, 0);
+
+      donutCenterVal.textContent = fmtINR(displayedTotal);
+      donutCenterLabel.textContent = appState.categoryViewFilter === 'ALL' ? 'Living Outflows' : (appState.categoryViewFilter === 'NEED_ESSENTIAL' ? 'Essential Needs' : 'Discretionary Wants');
+      donutCenterPct.textContent = `${displayedCats.length} Categories Tracked`;
+
+      document.getElementById('cat-needs-share-label').textContent = fmtINR(data.budget.needs);
+      document.getElementById('cat-wants-share-label').textContent = fmtINR(data.budget.wants);
+
+      // Render Donut Slices (only for categories with spend > 0)
+      const activeSpenders = displayedCats.filter(c => c.total > 0);
+      if (activeSpenders.length === 0) {
+        donutGroup.innerHTML = '<circle cx="80" cy="80" r="60" fill="transparent" stroke="#334155" stroke-width="18"></circle>';
+      } else {
+        const circumference = 376.99;
+        let strokeOffset = 0;
+        let svgSegments = '';
+
+        activeSpenders.forEach(cat => {
+          const pct = cat.total / displayedTotal;
+          const strokeLength = pct * circumference;
+          const strokeDash = `${strokeLength} ${circumference}`;
+
+          svgSegments += `
+            <circle
+              class="donut-slice"
+              cx="80" cy="80" r="60"
+              fill="transparent"
+              stroke="${cat.color}"
+              stroke-width="18"
+              stroke-dasharray="${strokeDash}"
+              stroke-dashoffset="-${strokeOffset}"
+              data-cat-name="${cat.name}"
+              data-cat-amount="${cat.total}"
+              data-cat-pct="${(pct * 100).toFixed(1)}"
+            ></circle>
+          `;
+
+          strokeOffset += strokeLength;
+        });
+
+        donutGroup.innerHTML = svgSegments;
+      }
+
+      // Render Ranked 10 Master Categories with Budget Progress & Subcategories
+      categoryBarsContainer.innerHTML = displayedCats.map(cat => {
+        const budgetCap = cat.budgetCap || 1;
+        const consumedPct = Math.round((cat.total / budgetCap) * 100);
+        const isOver = cat.total > budgetCap;
+        const remaining = Math.max(0, budgetCap - cat.total);
+
+        const isNeed = cat.bucket === 'NEED_ESSENTIAL';
+        const bucketBadge = isNeed
+          ? '<span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-400 border border-indigo-800">Need</span>'
+          : '<span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">Want</span>';
+
+        const variancePill = isOver
+          ? `<span class="text-[9px] font-bold text-rose-400 bg-rose-950 px-1.5 py-0.5 rounded border border-rose-800">Over by ${fmtINR(cat.total - budgetCap)}</span>`
+          : `<span class="text-[9px] text-slate-400">${fmtINR(remaining)} left</span>`;
+
+        const progressBarColor = isOver
+          ? 'bg-rose-500'
+          : (consumedPct > 80 ? 'bg-amber-500' : 'bg-emerald-500');
+
+        return `
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 hover:border-slate-700 transition-all space-y-2 group cursor-pointer"
+               data-bar-cat="${cat.name}" data-bar-amount="${cat.total}" data-bar-pct="${consumedPct}">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-base">${cat.icon}</span>
+                <span class="font-semibold text-slate-200 group-hover:text-white transition-colors">${cat.name}</span>
+                ${bucketBadge}
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold font-mono-num text-slate-100">${fmtINR(cat.total)}</span>
+                <span class="text-[11px] text-slate-500 font-mono-num">/ ${fmtINR(budgetCap)}</span>
+                ${variancePill}
+                <button type="button" data-edit-cat="${cat.name}" class="text-slate-400 hover:text-indigo-300 p-1 hover:bg-slate-800 rounded transition-colors text-xs" title="Edit ${cat.name} Limit">
+                  ✏️
+                </button>
+              </div>
+            </div>
+
+            <!-- Budget Progress Bar -->
+            <div class="space-y-1">
+              <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                <div class="h-2 rounded-full transition-all duration-500 ${progressBarColor}" style="width: ${Math.min(100, consumedPct)}%"></div>
+              </div>
+              <div class="flex items-center justify-between text-[10px] text-slate-500">
+                <span class="line-clamp-1 text-slate-400">${cat.examples}</span>
+                <span class="font-mono-num font-medium flex-shrink-0 ml-2">${consumedPct}% utilized</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 5. Panel 4: Channel Analytics
+      const channelsContainer = document.getElementById('channels-container');
+      channelsContainer.innerHTML = Object.keys(data.channels).map(chName => {
+        const item = data.channels[chName];
+        const avg = item.count > 0 ? Math.round(item.spend / item.count) : 0;
+        return `
+          <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+            <div>
+              <span class="font-medium text-slate-200 block">${chName}</span>
+              <span class="text-[10px] text-slate-500">${item.count} Txns • Avg Ticket: ${fmtINR(avg)}</span>
+            </div>
+            <span class="font-bold text-slate-100 font-mono-num">${fmtINR(item.spend)}</span>
+          </div>
+        `;
+      }).join('');
+
+      // 6. Panel 5: 50/30/20 Budget Burndown
+      const takeHome = cfg.takeHomeSalary;
+      const needsLimit = Math.round(takeHome * (cfg.needsPct / 100));
+      const wantsLimit = Math.round(takeHome * (cfg.wantsPct / 100));
+      const surplusMin = Math.round(takeHome * (cfg.surplusPct / 100));
+
+      document.getElementById('budget-takehome-subtitle').textContent = `Monthly Take-Home Baseline: ${fmtINR(takeHome)}`;
+      document.getElementById('budget-needs-label').textContent = `Needs (Essential ≤ ${cfg.needsPct}%)`;
+      document.getElementById('budget-wants-label').textContent = `Wants (Discretionary ≤ ${cfg.wantsPct}%)`;
+      document.getElementById('budget-surplus-label').textContent = `Surplus / Retained (≥ ${cfg.surplusPct}%)`;
+
+      const needsPct = Math.round((data.budget.needs / needsLimit) * 1000) / 10;
+      const wantsPct = Math.round((data.budget.wants / wantsLimit) * 1000) / 10;
+      const actualSurplus = takeHome - data.budget.totalLivingExpenses;
+      const savingsRate = Math.round((actualSurplus / takeHome) * 1000) / 10;
+
+      document.getElementById('budget-needs-val').textContent = `${fmtINR(data.budget.needs)} / ${fmtINR(needsLimit)}`;
+      document.getElementById('budget-needs-bar').style.width = `${Math.min(100, needsPct)}%`;
+      document.getElementById('budget-needs-pct').textContent = `${needsPct}% Consumed`;
+      document.getElementById('budget-needs-rem').textContent = `${fmtINR(Math.max(0, needsLimit - data.budget.needs))} remaining`;
+
+      document.getElementById('budget-wants-val').textContent = `${fmtINR(data.budget.wants)} / ${fmtINR(wantsLimit)}`;
+      document.getElementById('budget-wants-bar').style.width = `${Math.min(100, wantsPct)}%`;
+      document.getElementById('budget-wants-pct').textContent = `${wantsPct}% Consumed`;
+      document.getElementById('budget-wants-rem').textContent = `${fmtINR(Math.max(0, wantsLimit - data.budget.wants))} remaining`;
+
+      document.getElementById('budget-surplus-val').textContent = `${fmtINR(actualSurplus)} / ${fmtINR(surplusMin)}`;
+      document.getElementById('budget-surplus-bar').style.width = `${Math.min(100, (actualSurplus / surplusMin) * 100)}%`;
+      document.getElementById('budget-surplus-pct').textContent = `${Math.round((actualSurplus / surplusMin) * 100)}% of Min Target`;
+      document.getElementById('actual-savings-rate-label').textContent = `${savingsRate}%`;
+
+      // 7. Panel 6: Tax Ceiling Sentry
+      document.getElementById('tax-ceiling-subtitle').textContent = `New Tax Regime (Sec 115BAC) ${fmtINR(cfg.taxCeiling)} Zero-Tax Ceiling`;
+      document.getElementById('tax-net-salary-val').textContent = fmtINR(data.tax.netTaxableSalary);
+      document.getElementById('tax-interest-val').textContent = `+${fmtINR(data.tax.nonSalaryInterest)}`;
+      document.getElementById('tax-total-val').textContent = fmtINR(data.tax.totalTaxableIncome);
+      document.getElementById('tax-buffer-remaining').textContent = `Buffer: ${fmtINR(data.tax.taxBuffer)}`;
+      document.getElementById('tax-cap-label').textContent = `Threshold: ${fmtINR(cfg.taxCeiling)}`;
+
+      const taxPct = (data.tax.totalTaxableIncome / cfg.taxCeiling) * 100;
+      const taxBar = document.getElementById('tax-buffer-bar');
+      taxBar.style.width = `${Math.min(100, taxPct)}%`;
+
+      const taxBadge = document.getElementById('tax-status-badge');
+      const toggleArbBtn = document.getElementById('toggle-arbitrage-btn');
+
+      if (appState.arbitrageApplied) {
+        taxBar.className = 'bg-emerald-500 h-2 rounded-full';
+        taxBadge.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+        taxBadge.textContent = 'ARBITRAGE ACTIVE';
+        toggleArbBtn.textContent = 'Revert Strategy';
+        toggleArbBtn.className = 'text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-2 py-0.5 rounded border border-slate-700 transition-colors';
+        document.getElementById('arbitrage-desc').innerHTML = `
+          <strong class="text-emerald-400">Strategy Implemented:</strong> The parental deposit is shifted to an Arbitrage Growth Fund. Zero slab-taxed interest generated. <strong>Tax buffer restored to ${fmtINR(data.tax.taxBuffer)}</strong>.
+        `;
+      } else {
+        taxBar.className = 'bg-amber-500 h-2 rounded-full';
+        taxBadge.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 pulse-amber';
+        taxBadge.textContent = `TIGHT BUFFER (${fmtINR(data.tax.taxBuffer)})`;
+        toggleArbBtn.textContent = 'Apply Strategy';
+        toggleArbBtn.className = 'text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-2 py-0.5 rounded transition-colors';
+        document.getElementById('arbitrage-desc').innerHTML = `
+          Migrate the parental deposit into an <strong class="text-indigo-200">Arbitrage Fund (Growth)</strong> to eliminate annual interest on this PAN, unlocking ₹70k+ safety buffer and utilizing the ₹1.25L equity LTCG exemption.
+        `;
+      }
+
+
+      // 8. Panel 7: WEEKLY SPEND VELOCITY & BURN-RATE GAUGE
+      const activeMonthTxs = sortedTxs.filter(t => t.date.substring(0, 7) === (data.selMonth === 'ALL' ? '2026-10' : data.selMonth));
+      const livingOutflows = activeMonthTxs.filter(t => t.type === 'DIRECT_EXPENSE');
+      
+      const weeklySpends = [0, 0, 0, 0]; // Week 1 (1-7), Week 2 (8-14), Week 3 (15-21), Week 4+ (22-31)
+      let maxDay = 1;
+
+      livingOutflows.forEach(tx => {
+        const day = parseInt(tx.date.substring(8, 10), 10) || 1;
+        if (day > maxDay) maxDay = day;
+        const amt = Number(tx.amount) || 0;
+        if (day <= 7) weeklySpends[0] += amt;
+        else if (day <= 14) weeklySpends[1] += amt;
+        else if (day <= 21) weeklySpends[2] += amt;
+        else weeklySpends[3] += amt;
+      });
+
+      const totalSpentPeriod = data.budget.totalLivingExpenses;
+      const daysElapsed = Math.max(1, maxDay);
+      const dailyBurnRate = Math.round(totalSpentPeriod / daysElapsed);
+      const projectedTotal = Math.round(dailyBurnRate * 30);
+      const totalLivingCap = Object.values(cfg.categoryBudgets || DEFAULT_CONFIG.categoryBudgets).reduce((sum, v) => sum + v, 0) || 54500;
+      const weeklyBenchmark = Math.round(totalLivingCap / 4);
+
+      document.getElementById('burn-daily-rate').textContent = `${fmtINR(dailyBurnRate)} / day`;
+      document.getElementById('burn-days-elapsed').textContent = `Elapsed: Day ${daysElapsed} of 30`;
+      document.getElementById('burn-projected-total').textContent = fmtINR(projectedTotal);
+      document.getElementById('burn-projected-cap').textContent = `vs. ${fmtINR(totalLivingCap)} Cap`;
+      document.getElementById('burn-weekly-target-label').textContent = `~${fmtINR(weeklyBenchmark)} / week`;
+
+      const velocityBadge = document.getElementById('velocity-status-badge');
+      if (projectedTotal > totalLivingCap * 1.1) {
+        velocityBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800';
+        velocityBadge.textContent = 'HIGH BURN ALERT';
+      } else if (projectedTotal > totalLivingCap) {
+        velocityBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800';
+        velocityBadge.textContent = 'STEADY BURN';
+      } else {
+        velocityBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+        velocityBadge.textContent = 'ON TRACK (PACED)';
+      }
+
+      const weekNames = ['Week 1 (Days 1–7)', 'Week 2 (Days 8–14)', 'Week 3 (Days 15–21)', 'Week 4+ (Days 22–31)'];
+      document.getElementById('burn-weekly-tranches').innerHTML = weeklySpends.map((spent, idx) => {
+        const pctOfTranche = Math.round((spent / weeklyBenchmark) * 100);
+        const barColor = pctOfTranche > 150 ? 'bg-indigo-500' : (pctOfTranche > 100 ? 'bg-amber-500' : 'bg-emerald-500');
+        const note = idx === 0 && spent >= 22000 ? '<span class="text-[9px] text-indigo-400">(Includes Rent)</span>' : '';
+        return `
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-300 font-medium">${weekNames[idx]} ${note}</span>
+              <span class="font-mono-num font-bold text-slate-200">${fmtINR(spent)} <span class="text-[10px] text-slate-500">/ ${fmtINR(weeklyBenchmark)}</span></span>
+            </div>
+            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/60">
+              <div class="${barColor} h-2 rounded-full transition-all duration-500" style="width: ${Math.min(100, (spent / (weeklyBenchmark * 1.8)) * 100)}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 9. Panel 8: CASH-DRAG & EMERGENCY RUNWAY METER
+      const totalSpendableCash = data.totalSpendable;
+      const runwayMonths = Math.round((totalSpendableCash / totalLivingCap) * 100) / 100;
+      const runwayProgressBar = document.getElementById('runway-progress-bar');
+      const runwayTierBadge = document.getElementById('runway-tier-badge');
+      const targetReserve = totalLivingCap * 3;
+
+      document.getElementById('runway-months-val').innerHTML = `${runwayMonths} <span class="text-sm font-normal text-slate-400">Months</span>`;
+      document.getElementById('runway-liquid-cash').textContent = fmtINR(totalSpendableCash);
+      document.getElementById('runway-spend-subtext').textContent = `Based on ${fmtINR(totalLivingCap)}/mo Living Cap`;
+      document.getElementById('runway-target-reserve-label').textContent = fmtINR(targetReserve);
+
+      // Max scale = 6 months
+      const runwayWidthPct = Math.min(100, (runwayMonths / 6) * 100);
+      runwayProgressBar.style.width = `${runwayWidthPct}%`;
+
+      const cashDragDesc = document.getElementById('cash-drag-desc');
+      const cashDragSurplus = document.getElementById('cash-drag-surplus-label');
+
+      if (runwayMonths < 1.0) {
+        runwayTierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800';
+        runwayTierBadge.textContent = 'CRITICAL LIQUIDITY (<1 Mo)';
+        runwayProgressBar.className = 'bg-rose-500 h-2.5 rounded-full';
+        cashDragSurplus.textContent = '₹0 Surplus';
+        cashDragDesc.innerHTML = 'Liquid reserves are lean. Prioritize retaining surplus in Federal/HDFC to build a 2-month baseline safety buffer.';
+      } else if (runwayMonths <= 3.0) {
+        runwayTierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+        runwayTierBadge.textContent = 'HEALTHY RUNWAY (1-3 Mos)';
+        runwayProgressBar.className = 'bg-emerald-500 h-2.5 rounded-full';
+        cashDragSurplus.textContent = 'Optimal Buffer';
+        cashDragDesc.innerHTML = `Your ${fmtINR(totalSpendableCash)} liquid cash provides a well-balanced operational runway without excessive cash drag against inflation.`;
+      } else {
+        const excessCash = totalSpendableCash - targetReserve;
+        const annualLostYield = Math.round(excessCash * 0.04); // 4% gap between 3% savings and 7% arbitrage
+        runwayTierBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 pulse-amber';
+        runwayTierBadge.textContent = 'CASH DRAG (>3 Mos)';
+        runwayProgressBar.className = 'bg-amber-500 h-2.5 rounded-full';
+        cashDragSurplus.textContent = `${fmtINR(excessCash)} Idle Surplus`;
+        cashDragDesc.innerHTML = `Holding ${fmtINR(excessCash)} above 3-month reserves incurs ~<strong>${fmtINR(annualLostYield)}/yr</strong> yield drag at 3% savings vs 7% Arbitrage Funds. Deploy excess into liquid growth.`;
+      }
+
+      renderLedger();
+    }
+
+    // RENDER AUDIT LOG LEDGER TABLE
+    function renderLedger() {
+      const typeFilter = document.getElementById('ledger-filter-type').value;
+      const isMonthLocked = document.getElementById('ledger-month-lock-cb').checked;
+      const tbody = document.getElementById('ledger-tbody');
+
+      let filtered = appState.transactions;
+
+      if (isMonthLocked && appState.selectedMonth !== 'ALL') {
+        filtered = filtered.filter(t => t.date.substring(0, 7) === appState.selectedMonth);
+      }
+
+      if (typeFilter !== 'ALL') {
+        filtered = filtered.filter(t => t.type === typeFilter);
+      }
+
+      document.getElementById('ledger-count-pill').textContent = `${filtered.length} Txns`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-6 text-center text-slate-500 italic">No transactions recorded for this period & filter selection</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(t => {
+        let typeBadge = '';
+        switch (t.type) {
+          case 'SALARY_INFLOW':
+            typeBadge = '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px]">SALARY_INFLOW</span>';
+            break;
+          case 'DIRECT_EXPENSE':
+            const classColor = t.budgetBucket === 'NEED_ESSENTIAL' ? 'text-indigo-400' : 'text-amber-400';
+            typeBadge = `<span class="px-1.5 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800 text-[10px]">DIRECT_EXPENSE</span> <span class="text-[9px] ${classColor}">(${t.budgetBucket === 'NEED_ESSENTIAL' ? 'Need' : 'Want'})</span>`;
+            break;
+          case 'INTERBANK_TRANSFER':
+            typeBadge = '<span class="px-1.5 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 text-[10px]">INTERBANK_TRF</span>';
+            break;
+          case 'ASSET_ALLOCATION':
+            typeBadge = '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px]">ASSET_ALLOC</span>';
+            break;
+          case 'DEBT_REPAYMENT':
+            typeBadge = '<span class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[10px]">DEBT_REPAYMENT</span>';
+            break;
+        }
+
+        const amtColor = t.type === 'SALARY_INFLOW' ? 'text-emerald-400' : (t.type === 'DIRECT_EXPENSE' ? 'text-rose-400' : 'text-slate-200');
+
+        return `
+          <tr class="hover:bg-slate-800/40 transition-colors">
+            <td class="py-2.5 text-slate-400 text-[11px]">${t.date}</td>
+            <td class="py-2.5">${typeBadge}</td>
+            <td class="py-2.5 text-slate-300 text-[11px]">${t.channel}</td>
+            <td class="py-2.5 text-slate-200 text-[11px] font-medium">${t.desc}</td>
+            <td class="py-2.5 text-slate-400 text-[11px]">${t.source || '—'}</td>
+            <td class="py-2.5 text-slate-400 text-[11px]">${t.destination || '—'}</td>
+            <td class="py-2.5 text-right font-bold font-mono-num ${amtColor}">${fmtINR(t.amount)}</td>
+            <td class="py-2.5 text-center">
+              <button type="button" data-delete-id="${t.id}" class="text-slate-500 hover:text-rose-400 p-1 text-xs" title="Delete & Revert">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // DONUT HOVER TELEMETRY
+    document.getElementById('category-bars-container').addEventListener('mouseover', (e) => {
+      const card = e.target.closest('[data-bar-cat]');
+      if (!card) return;
+      const name = card.getAttribute('data-bar-cat');
+      const amount = parseFloat(card.getAttribute('data-bar-amount'));
+      const pct = card.getAttribute('data-bar-pct');
+
+      document.getElementById('donut-center-label').textContent = name;
+      document.getElementById('donut-center-val').textContent = fmtINR(amount);
+      document.getElementById('donut-center-pct').textContent = `${pct}% of Budget Cap`;
+    });
+
+    document.getElementById('category-bars-container').addEventListener('mouseleave', () => {
+      const data = computeEngine();
+      let displayedCats = data.categoryBreakdown;
+      if (appState.categoryViewFilter === 'NEED_ESSENTIAL') displayedCats = data.categoryBreakdown.filter(c => c.bucket === 'NEED_ESSENTIAL');
+      else if (appState.categoryViewFilter === 'WANT_DISCRETIONARY') displayedCats = data.categoryBreakdown.filter(c => c.bucket === 'WANT_DISCRETIONARY');
+      const displayedTotal = displayedCats.reduce((sum, c) => sum + c.total, 0);
+
+      document.getElementById('donut-center-label').textContent = appState.categoryViewFilter === 'ALL' ? 'Living Outflows' : (appState.categoryViewFilter === 'NEED_ESSENTIAL' ? 'Essential Needs' : 'Discretionary Wants');
+      document.getElementById('donut-center-val').textContent = fmtINR(displayedTotal);
+      document.getElementById('donut-center-pct').textContent = 'Total Spent';
+    });
+
+    // CATEGORY VIEW FILTER PILLS (ALL / NEEDS / WANTS)
+    const catFilterAllBtn = document.getElementById('cat-filter-all-btn');
+    const catFilterNeedsBtn = document.getElementById('cat-filter-needs-btn');
+    const catFilterWantsBtn = document.getElementById('cat-filter-wants-btn');
+
+    function updateCatFilterButtons(filter) {
+      appState.categoryViewFilter = filter;
+      saveState();
+
+      catFilterAllBtn.className = filter === 'ALL'
+        ? 'px-2.5 py-1 rounded-lg font-semibold bg-indigo-600 text-white transition-colors'
+        : 'px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-colors';
+
+      catFilterNeedsBtn.className = filter === 'NEED_ESSENTIAL'
+        ? 'px-2.5 py-1 rounded-lg font-semibold bg-indigo-600 text-white transition-colors'
+        : 'px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-colors';
+
+      catFilterWantsBtn.className = filter === 'WANT_DISCRETIONARY'
+        ? 'px-2.5 py-1 rounded-lg font-semibold bg-indigo-600 text-white transition-colors'
+        : 'px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white transition-colors';
+
+      renderApp();
+    }
+
+    catFilterAllBtn.addEventListener('click', () => updateCatFilterButtons('ALL'));
+    catFilterNeedsBtn.addEventListener('click', () => updateCatFilterButtons('NEED_ESSENTIAL'));
+    catFilterWantsBtn.addEventListener('click', () => updateCatFilterButtons('WANT_DISCRETIONARY'));
+
+    // MONTH SELECTOR & NAVIGATOR CONTROLS
+    const monthSelect = document.getElementById('month-select');
+    const prevMonthBtn = document.getElementById('prev-month-btn');
+    const nextMonthBtn = document.getElementById('next-month-btn');
+
+    const availableMonths = ['2026-08', '2026-09', '2026-10', 'ALL'];
+
+    function setMonth(m) {
+      appState.selectedMonth = m;
+      monthSelect.value = m;
+      saveState();
+      renderApp();
+      const monthNames = { '2026-10': 'October 2026', '2026-09': 'September 2026', '2026-08': 'August 2026', 'ALL': 'All Time' };
+      showToast(`Switched view to ${monthNames[m] || m}`);
+    }
+
+    monthSelect.addEventListener('change', (e) => {
+      setMonth(e.target.value);
+    });
+
+    prevMonthBtn.addEventListener('click', () => {
+      const idx = availableMonths.indexOf(appState.selectedMonth);
+      if (idx > 0) {
+        setMonth(availableMonths[idx - 1]);
+      } else {
+        showToast('Reached earliest available sample month (August 2026).', false);
+      }
+    });
+
+    nextMonthBtn.addEventListener('click', () => {
+      const idx = availableMonths.indexOf(appState.selectedMonth);
+      if (idx !== -1 && idx < availableMonths.length - 1) {
+        setMonth(availableMonths[idx + 1]);
+      } else {
+        showToast('At current active period.', false);
+      }
+    });
+
+    document.getElementById('ledger-month-lock-cb').addEventListener('change', renderLedger);
+    document.getElementById('ledger-filter-type').addEventListener('change', renderLedger);
+
+    // CSV EXPORT GENERATOR
+    function exportToCSV() {
+      if (!appState.transactions || appState.transactions.length === 0) {
+        showToast('No transactions to export.', false);
+        return;
+      }
+
+      const headers = ['ID', 'Date', 'Type', 'Amount (INR)', 'Category', 'Channel', 'Source_Account', 'Destination_Account', 'Budget_Bucket', 'Description'];
+      const rows = appState.transactions.map(t => [
+        t.id,
+        t.date,
+        t.type,
+        t.amount,
+        `"${(t.category || '').replace(/"/g, '""')}"`,
+        `"${(t.channel || '').replace(/"/g, '""')}"`,
+        t.source || '',
+        t.destination || '',
+        t.budgetBucket || 'NOT_APPLICABLE',
+        `"${(t.desc || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `wealth_telemetry_ledger_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('CSV export downloaded successfully!');
+    }
+
+    // CSV IMPORT PARSER
+    function importCSV(text) {
+      try {
+        const lines = text.trim().split(/\r\n|\n/);
+        if (lines.length < 2) {
+          showToast('CSV file is empty or missing headers.', false);
+          return;
+        }
+
+        const validTypes = ['DIRECT_EXPENSE', 'INTERBANK_TRANSFER', 'ASSET_ALLOCATION', 'DEBT_REPAYMENT', 'SALARY_INFLOW'];
+        let importedCount = 0;
+
+        function parseCSVLine(line) {
+          const values = [];
+          let current = '';
+          let inQuotes = false;
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"' && (i === 0 || line[i-1] !== '\\')) {
+              inQuotes = !inQuotes;
+            } else if (char === ',' && !inQuotes) {
+              values.push(current.trim());
+              current = '';
+            } else {
+              current += char;
+            }
+          }
+          values.push(current.trim());
+          return values.map(v => v.replace(/^"|"$/g, '').replace(/""/g, '"'));
+        }
+
+        const headerLine = parseCSVLine(lines[0]);
+        const dateIdx = headerLine.findIndex(h => /date/i.test(h));
+        const typeIdx = headerLine.findIndex(h => /type/i.test(h));
+        const amtIdx = headerLine.findIndex(h => /amount/i.test(h));
+        const descIdx = headerLine.findIndex(h => /desc/i.test(h));
+        const catIdx = headerLine.findIndex(h => /category/i.test(h));
+        const chanIdx = headerLine.findIndex(h => /channel/i.test(h));
+        const srcIdx = headerLine.findIndex(h => /source/i.test(h));
+        const dstIdx = headerLine.findIndex(h => /destination|dest/i.test(h));
+        const bucketIdx = headerLine.findIndex(h => /bucket/i.test(h));
+
+        for (let i = 1; i < lines.length; i++) {
+          const row = parseCSVLine(lines[i]);
+          if (row.length < 3) continue;
+
+          const date = dateIdx !== -1 ? row[dateIdx] : new Date().toISOString().split('T')[0];
+          let type = typeIdx !== -1 ? row[typeIdx].trim().toUpperCase() : 'DIRECT_EXPENSE';
+          if (!validTypes.includes(type)) type = 'DIRECT_EXPENSE';
+
+          const amt = amtIdx !== -1 ? parseFloat(row[amtIdx]) : NaN;
+          if (isNaN(amt) || amt <= 0) continue;
+
+          const desc = descIdx !== -1 ? row[descIdx] : 'Imported Transaction';
+          const rawCat = catIdx !== -1 ? row[catIdx] : 'Miscellaneous & Buffer';
+          const category = resolveCategory(rawCat);
+          const channel = chanIdx !== -1 ? row[chanIdx] : 'HDFC NetBanking (No UPI)';
+          const source = srcIdx !== -1 && row[srcIdx] ? row[srcIdx] : (type === 'SALARY_INFLOW' ? null : 'HDFC_SALARY');
+          const destination = dstIdx !== -1 && row[dstIdx] ? row[dstIdx] : null;
+          const budgetBucket = bucketIdx !== -1 && row[bucketIdx] ? row[bucketIdx] : (MASTER_CATEGORIES[category] ? MASTER_CATEGORIES[category].bucket : 'NOT_APPLICABLE');
+
+          appState.transactions.unshift({
+            id: 'imp-' + Date.now() + '-' + i,
+            date,
+            type,
+            amount: amt,
+            desc,
+            category,
+            channel,
+            source,
+            destination,
+            budgetBucket
+          });
+          importedCount++;
+        }
+
+        saveState();
+        renderApp();
+        showToast(`Successfully imported ${importedCount} transactions from CSV!`);
+      } catch (err) {
+        showToast('Failed to parse CSV file. Ensure valid formatting.', false);
+      }
+    }
+
+    // DYNAMIC FORM FIELDS UPDATE BASED ON ARCHITECTURE TYPE
+    const formTxnType = document.getElementById('form-txn-type');
+    const dynamicFields = document.getElementById('dynamic-form-fields');
+
+    function updateDynamicFormFields() {
+      const type = formTxnType.value;
+      let html = '';
+
+      if (type === 'DIRECT_EXPENSE') {
+        html = `
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="form-source" class="block font-medium text-slate-300 mb-1">Source Account / Card</label>
+              <select id="form-source" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="HDFC_SALARY">HDFC Bank (Salary)</option>
+                <option value="FEDERAL_SAVINGS">Federal Bank (Savings)</option>
+                <option value="CC_SIGNET">Federal Signet CC</option>
+                <option value="CC_PAYTM_AU" selected>Paytm AU RuPay CC</option>
+              </select>
+            </div>
+            <div>
+              <label for="form-channel" class="block font-medium text-slate-300 mb-1">Payment Rail / Channel</label>
+              <select id="form-channel" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="Paytm (Paytm AU RuPay CC UPI)">Paytm (Paytm AU RuPay CC UPI)</option>
+                <option value="Paytm AU CC (POS / Online)">Paytm AU CC (POS / Online)</option>
+                <option value="Federal Bank Signet CC (POS / Fuel)">Federal Bank Signet CC (POS / Fuel)</option>
+                <option value="GPay (Federal Bank UPI)">GPay (Federal Bank UPI)</option>
+                <option value="Paytm (Federal Bank UPI)">Paytm (Federal Bank UPI)</option>
+                <option value="HDFC NetBanking (No UPI)">HDFC NetBanking (No UPI)</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="form-category" class="block font-medium text-slate-300 mb-1">10 Master Spend Categories</label>
+              <select id="form-category" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <optgroup label="Needs (Essential - 50% Bucket)">
+                  <option value="Housing & Rent" selected>🏠 Housing & Rent (₹22,000 Cap)</option>
+                  <option value="Groceries & Supermarket">🛒 Groceries & Supermarket (₹6,000 Cap)</option>
+                  <option value="Utilities & Bills">💡 Utilities & Bills (₹3,500 Cap)</option>
+                  <option value="Transportation & Fuel">⛽ Transportation & Fuel (₹4,500 Cap)</option>
+                  <option value="Health & Fitness">🩺 Health & Fitness (₹3,000 Cap)</option>
+                </optgroup>
+                <optgroup label="Wants (Discretionary - 30% Bucket)">
+                  <option value="Dining & Food Delivery">🍽️ Dining & Food Delivery (₹4,000 Cap)</option>
+                  <option value="Shopping & Apparel">🛍️ Shopping & Apparel (₹4,500 Cap)</option>
+                  <option value="Subscriptions & Tech">💻 Subscriptions & Tech (₹1,500 Cap)</option>
+                  <option value="Entertainment & Social">🎬 Entertainment & Social (₹3,000 Cap)</option>
+                  <option value="Miscellaneous & Buffer">📦 Miscellaneous & Buffer (₹2,500 Cap)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div>
+              <label for="form-bucket" class="block font-medium text-slate-300 mb-1">Budget Classification</label>
+              <select id="form-bucket" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="NEED_ESSENTIAL">NEED (Essential Living)</option>
+                <option value="WANT_DISCRETIONARY" selected>WANT (Discretionary)</option>
+              </select>
+            </div>
+          </div>
+        `;
+      } else if (type === 'INTERBANK_TRANSFER') {
+        html = `
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="form-source" class="block font-medium text-slate-300 mb-1">From Bank</label>
+              <select id="form-source" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="HDFC_SALARY">HDFC Bank (Salary)</option>
+                <option value="FEDERAL_SAVINGS">Federal Bank (Savings)</option>
+              </select>
+            </div>
+            <div>
+              <label for="form-dest" class="block font-medium text-slate-300 mb-1">To Bank</label>
+              <select id="form-dest" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="FEDERAL_SAVINGS">Federal Bank (Savings)</option>
+                <option value="HDFC_SALARY">HDFC Bank (Salary)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="form-channel" class="block font-medium text-slate-300 mb-1">Transfer Rail</label>
+            <select id="form-channel" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+              <option value="HDFC NetBanking (No UPI)">HDFC NetBanking / NEFT</option>
+              <option value="GPay (Federal Bank UPI)">GPay UPI</option>
+            </select>
+          </div>
+        `;
+      } else if (type === 'ASSET_ALLOCATION') {
+        html = `
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="form-source" class="block font-medium text-slate-300 mb-1">Funding Bank</label>
+              <select id="form-source" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="HDFC_SALARY">HDFC Bank (Salary)</option>
+                <option value="FEDERAL_SAVINGS">Federal Bank (Savings)</option>
+              </select>
+            </div>
+            <div>
+              <label for="form-dest" class="block font-medium text-slate-300 mb-1">Target Asset Bucket</label>
+              <select id="form-dest" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="HDFC_PPF">HDFC PPF (15-Yr Tax-Free EEE)</option>
+                <option value="FD_SIGNET_LIEN">Federal FD Lien (7.0% p.a.)</option>
+                <option value="MARKET_CAPITAL">Market Capital (Arbitrage / Equity Cost Basis)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="form-channel" class="block font-medium text-slate-300 mb-1">Deployment Channel</label>
+            <select id="form-channel" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+              <option value="HDFC NetBanking (No UPI)">HDFC NetBanking</option>
+              <option value="Federal Bank App">Federal Bank App</option>
+            </select>
+          </div>
+        `;
+      } else if (type === 'DEBT_REPAYMENT') {
+        html = `
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="form-source" class="block font-medium text-slate-300 mb-1">Settlement Bank</label>
+              <select id="form-source" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="FEDERAL_SAVINGS">Federal Bank (Savings)</option>
+                <option value="HDFC_SALARY">HDFC Bank (Salary)</option>
+              </select>
+            </div>
+            <div>
+              <label for="form-dest" class="block font-medium text-slate-300 mb-1">Credit Card Settled</label>
+              <select id="form-dest" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+                <option value="CC_SIGNET">Federal Bank Signet</option>
+                <option value="CC_PAYTM_AU">Paytm AU RuPay</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label for="form-channel" class="block font-medium text-slate-300 mb-1">Payment Rail</label>
+            <select id="form-channel" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+              <option value="GPay (Federal Bank UPI)">GPay (Federal Bank UPI)</option>
+              <option value="Paytm (Federal Bank UPI)">Paytm (Federal Bank UPI)</option>
+              <option value="HDFC NetBanking (No UPI)">HDFC NetBanking</option>
+            </select>
+          </div>
+        `;
+      } else if (type === 'SALARY_INFLOW') {
+        html = `
+          <div>
+            <label for="form-dest" class="block font-medium text-slate-300 mb-1">Destination Account</label>
+            <select id="form-dest" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-100">
+              <option value="HDFC_SALARY">HDFC Bank (Salary Account)</option>
+            </select>
+          </div>
+          <div>
+            <label for="form-channel" class="block font-medium text-slate-300 mb-1">Credit Rail</label>
+            <input type="text" id="form-channel" value="HDFC NetBanking (No UPI)" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-2 text-slate-400">
+          </div>
+        `;
+      }
+
+      dynamicFields.innerHTML = html;
+
+      const formCat = document.getElementById('form-category');
+      const formBucket = document.getElementById('form-bucket');
+      if (formCat && formBucket) {
+        formCat.addEventListener('change', () => {
+          const catMeta = MASTER_CATEGORIES[formCat.value];
+          if (catMeta) {
+            formBucket.value = catMeta.bucket;
+          }
+        });
+      }
+    }
+
+    formTxnType.addEventListener('change', updateDynamicFormFields);
+
+    // Modal controls: Transaction Logger
+    const txnModal = document.getElementById('txn-modal');
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+    const txnForm = document.getElementById('txn-form');
+
+    function openModal() {
+      let defaultDate = new Date().toISOString().split('T')[0];
+      if (appState.selectedMonth && appState.selectedMonth !== 'ALL') {
+        defaultDate = `${appState.selectedMonth}-15`;
+      }
+      document.getElementById('form-date').value = defaultDate;
+      updateDynamicFormFields();
+      txnModal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      txnModal.classList.add('hidden');
+    }
+
+    openModalBtn.addEventListener('click', openModal);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalCancelBtn.addEventListener('click', closeModal);
+
+    // Modal controls: PWA Mobile Guide
+    const pwaGuideModal = document.getElementById('pwa-guide-modal');
+    const pwaGuideBtn = document.getElementById('pwa-guide-btn');
+    const pwaGuideCloseBtn = document.getElementById('pwa-guide-close-btn');
+    const pwaGuideDoneBtn = document.getElementById('pwa-guide-done-btn');
+
+    pwaGuideBtn.addEventListener('click', () => pwaGuideModal.classList.remove('hidden'));
+    pwaGuideCloseBtn.addEventListener('click', () => pwaGuideModal.classList.add('hidden'));
+    pwaGuideDoneBtn.addEventListener('click', () => pwaGuideModal.classList.add('hidden'));
+
+    // Modal controls: Configuration / Settings
+    const configModal = document.getElementById('config-modal');
+    const configBtn = document.getElementById('config-btn');
+    const configCloseBtn = document.getElementById('config-close-btn');
+    const configCancelBtn = document.getElementById('config-cancel-btn');
+    const configForm = document.getElementById('config-form');
+    const quickEditBudgetBtn = document.getElementById('quick-edit-budget-btn');
+    const cfgResetDefaultsBtn = document.getElementById('cfg-reset-defaults-btn');
+
+    function populateConfigForm() {
+      const cfg = appState.config;
+      document.getElementById('cfg-takehome').value = cfg.takeHomeSalary;
+      document.getElementById('cfg-needs-pct').value = cfg.needsPct;
+      document.getElementById('cfg-wants-pct').value = cfg.wantsPct;
+      document.getElementById('cfg-surplus-pct').value = cfg.surplusPct;
+      document.getElementById('cfg-signet-limit').value = cfg.signetLimit;
+      document.getElementById('cfg-paytm-limit').value = cfg.paytmLimit;
+      document.getElementById('cfg-safe-cur').value = cfg.safeCurThreshold;
+      document.getElementById('cfg-base-salary').value = cfg.baseAnnualSalary;
+      document.getElementById('cfg-std-deduction').value = cfg.standardDeduction;
+      document.getElementById('cfg-parental-interest').value = cfg.parentalInterest;
+      document.getElementById('cfg-tax-ceiling').value = cfg.taxCeiling;
+
+      // Populate 10 Category Budgets Grid
+      const catBudgetsGrid = document.getElementById('cfg-category-budgets-grid');
+      catBudgetsGrid.innerHTML = Object.keys(MASTER_CATEGORIES).map(catKey => {
+        const catMeta = MASTER_CATEGORIES[catKey];
+        const currentBudget = (cfg.categoryBudgets && cfg.categoryBudgets[catKey]) || catMeta.defaultBudget;
+        return `
+          <div class="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between gap-2">
+            <span class="truncate text-slate-300 font-medium">${catMeta.icon} ${catKey}</span>
+            <div class="flex items-center gap-1 w-28 flex-shrink-0">
+              <span class="text-slate-500">₹</span>
+              <input type="number" data-cat-cfg="${catKey}" value="${currentBudget}" step="500" min="0" required
+                class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1 text-slate-100 font-mono-num text-right focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateCalculatedConfigPreviews();
+    }
+
+    function updateCalculatedConfigPreviews() {
+      const takeHome = parseFloat(document.getElementById('cfg-takehome').value) || 0;
+      const needsPct = parseFloat(document.getElementById('cfg-needs-pct').value) || 0;
+      const wantsPct = parseFloat(document.getElementById('cfg-wants-pct').value) || 0;
+      const surplusPct = parseFloat(document.getElementById('cfg-surplus-pct').value) || 0;
+
+      document.getElementById('cfg-needs-calc').textContent = `Cap: ${fmtINR(takeHome * (needsPct / 100))}`;
+      document.getElementById('cfg-wants-calc').textContent = `Cap: ${fmtINR(takeHome * (wantsPct / 100))}`;
+      document.getElementById('cfg-surplus-calc').textContent = `Min: ${fmtINR(takeHome * (surplusPct / 100))}`;
+    }
+
+    document.getElementById('cfg-takehome').addEventListener('input', updateCalculatedConfigPreviews);
+    document.getElementById('cfg-needs-pct').addEventListener('input', updateCalculatedConfigPreviews);
+    document.getElementById('cfg-wants-pct').addEventListener('input', updateCalculatedConfigPreviews);
+    document.getElementById('cfg-surplus-pct').addEventListener('input', updateCalculatedConfigPreviews);
+
+    function openConfigModal() {
+      populateConfigForm();
+      configModal.classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      configModal.classList.add('hidden');
+    }
+
+    configBtn.addEventListener('click', openConfigModal);
+    quickEditBudgetBtn.addEventListener('click', openConfigModal);
+    configCloseBtn.addEventListener('click', closeConfigModal);
+    configCancelBtn.addEventListener('click', closeConfigModal);
+
+    configForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const takeHome = parseFloat(document.getElementById('cfg-takehome').value);
+      const needsPct = parseFloat(document.getElementById('cfg-needs-pct').value);
+      const wantsPct = parseFloat(document.getElementById('cfg-wants-pct').value);
+      const surplusPct = parseFloat(document.getElementById('cfg-surplus-pct').value);
+      const signetLimit = parseFloat(document.getElementById('cfg-signet-limit').value);
+      const paytmLimit = parseFloat(document.getElementById('cfg-paytm-limit').value);
+      const safeCurThreshold = parseFloat(document.getElementById('cfg-safe-cur').value);
+      const baseAnnualSalary = parseFloat(document.getElementById('cfg-base-salary').value);
+      const standardDeduction = parseFloat(document.getElementById('cfg-std-deduction').value);
+      const parentalInterest = parseFloat(document.getElementById('cfg-parental-interest').value);
+      const taxCeiling = parseFloat(document.getElementById('cfg-tax-ceiling').value);
+
+      const categoryBudgets = {};
+      document.querySelectorAll('[data-cat-cfg]').forEach(input => {
+        const catKey = input.getAttribute('data-cat-cfg');
+        categoryBudgets[catKey] = parseFloat(input.value) || 0;
+      });
+
+      appState.config = {
+        takeHomeSalary: takeHome,
+        needsPct: needsPct,
+        wantsPct: wantsPct,
+        surplusPct: surplusPct,
+        signetLimit: signetLimit,
+        paytmLimit: paytmLimit,
+        safeCurThreshold: safeCurThreshold,
+        baseAnnualSalary: baseAnnualSalary,
+        standardDeduction: standardDeduction,
+        parentalInterest: parentalInterest,
+        taxCeiling: taxCeiling,
+        hdfcOpening: appState.config.hdfcOpening || 45000,
+        federalOpening: appState.config.federalOpening || 17500,
+        categoryBudgets: categoryBudgets
+      };
+
+      saveState();
+      renderApp();
+      closeConfigModal();
+      showToast('10 Master Category budgets & spend limits applied successfully!');
+    });
+
+    cfgResetDefaultsBtn.addEventListener('click', () => {
+      appState.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      populateConfigForm();
+      saveState();
+      renderApp();
+      showToast('Settings reset to baseline PRD values.');
+    });
+
+    // Modal controls: Data Hub (CSV Import/Export)
+    const dataHubModal = document.getElementById('data-hub-modal');
+    const dataHubBtn = document.getElementById('data-hub-btn');
+    const dataHubCloseBtn = document.getElementById('data-hub-close-btn');
+    const modalExportCsvBtn = document.getElementById('modal-export-csv-btn');
+    const quickExportCsvBtn = document.getElementById('quick-export-csv-btn');
+    const triggerCsvUploadBtn = document.getElementById('trigger-csv-upload-btn');
+    const csvFileInput = document.getElementById('csv-file-input');
+
+    dataHubBtn.addEventListener('click', () => dataHubModal.classList.remove('hidden'));
+    dataHubCloseBtn.addEventListener('click', () => dataHubModal.classList.add('hidden'));
+    modalExportCsvBtn.addEventListener('click', exportToCSV);
+    quickExportCsvBtn.addEventListener('click', exportToCSV);
+
+    triggerCsvUploadBtn.addEventListener('click', () => csvFileInput.click());
+    csvFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        importCSV(event.target.result);
+        csvFileInput.value = '';
+        dataHubModal.classList.add('hidden');
+      };
+      reader.readAsText(file);
+    });
+
+    // PWA Install prompt integration (Chrome / Android)
+    let deferredPrompt;
+    const pwaInstallBtn = document.getElementById('pwa-install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      pwaInstallBtn.classList.remove('hidden');
+    });
+
+    pwaInstallBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        pwaGuideModal.classList.remove('hidden');
+        return;
+      }
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === 'accepted') {
+        showToast('App installed to your device!');
+      }
+      deferredPrompt = null;
+      pwaInstallBtn.classList.add('hidden');
+    });
+
+    // Form Submission: Double-Entry Commit
+    txnForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const type = formTxnType.value;
+      const amount = parseFloat(document.getElementById('form-amount').value);
+      const date = document.getElementById('form-date').value;
+      const desc = document.getElementById('form-desc').value.trim();
+
+      if (isNaN(amount) || amount <= 0 || !date || !desc) {
+        showToast('Please provide valid amount, date, and description.', false);
+        return;
+      }
+
+      const sourceEl = document.getElementById('form-source');
+      const destEl = document.getElementById('form-dest');
+      const channelEl = document.getElementById('form-channel');
+      const catEl = document.getElementById('form-category');
+      const bucketEl = document.getElementById('form-bucket');
+
+      const source = sourceEl ? sourceEl.value : null;
+      const destination = destEl ? destEl.value : null;
+      const channel = channelEl ? channelEl.value : 'HDFC NetBanking (No UPI)';
+      const category = catEl ? resolveCategory(catEl.value) : (type === 'SALARY_INFLOW' ? 'Salary Inflow' : 'Capital Allocation');
+      const budgetBucket = bucketEl ? bucketEl.value : 'NOT_APPLICABLE';
+
+      if (type === 'INTERBANK_TRANSFER' && source === destination) {
+        showToast('Source and destination bank must be distinct.', false);
+        return;
+      }
+
+      const newTx = {
+        id: 'tx-' + Date.now(),
+        date,
+        type,
+        source,
+        destination,
+        channel,
+        category,
+        budgetBucket,
+        amount,
+        desc
+      };
+
+      appState.transactions.unshift(newTx);
+      saveState();
+      renderApp();
+      closeModal();
+      txnForm.reset();
+
+      showToast(`Committed ${type}: ${desc} (${fmtINR(amount)})`);
+    });
+
+    // Event Delegation: Delete Transaction
+    document.getElementById('ledger-tbody').addEventListener('click', (e) => {
+      const delBtn = e.target.closest('[data-delete-id]');
+      if (!delBtn) return;
+      const id = delBtn.getAttribute('data-delete-id');
+      const idx = appState.transactions.findIndex(t => t.id === id);
+      if (idx !== -1) {
+        const removed = appState.transactions.splice(idx, 1)[0];
+        saveState();
+        renderApp();
+        showToast(`Reverted transaction: ${removed.desc}`);
+      }
+    });
+
+    // Arbitrage Strategy Toggle
+    document.getElementById('toggle-arbitrage-btn').addEventListener('click', () => {
+      appState.arbitrageApplied = !appState.arbitrageApplied;
+      saveState();
+      renderApp();
+      if (appState.arbitrageApplied) {
+        showToast('Arbitrage Strategy Activated: ₹65k interest removed from taxable pool!');
+      } else {
+        showToast('Arbitrage Strategy Deactivated: Reverted to default parental FD.');
+      }
+    });
+
+    // Reset Demo Data
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      appState = JSON.parse(JSON.stringify(INITIAL_STATE));
+      saveState();
+      renderApp();
+      dataHubModal.classList.add('hidden');
+      showToast('Demo data reloaded to baseline specifications.');
+    });
+
+
+    // DEDICATED CATEGORY LIMITS MODAL LOGIC
+    const catLimitsModal = document.getElementById('cat-limits-modal');
+    const openCatLimitsBtn = document.getElementById('open-cat-limits-btn');
+    const catLimitsCloseBtn = document.getElementById('cat-limits-close-btn');
+    const catLimitsCancelBtn = document.getElementById('cat-limits-cancel-btn');
+    const catLimitsForm = document.getElementById('cat-limits-form');
+    const catLimitsResetBtn = document.getElementById('cat-limits-reset-btn');
+    const catLimitsInputsList = document.getElementById('cat-limits-inputs-list');
+
+    function populateCatLimitsModal(highlightCat = null) {
+      const cfg = appState.config;
+      const catBudgets = cfg.categoryBudgets || DEFAULT_CONFIG.categoryBudgets;
+
+      catLimitsInputsList.innerHTML = Object.keys(MASTER_CATEGORIES).map(catKey => {
+        const catMeta = MASTER_CATEGORIES[catKey];
+        const currentCap = catBudgets[catKey] || catMeta.defaultBudget;
+        const isNeed = catMeta.bucket === 'NEED_ESSENTIAL';
+        const bucketBadge = isNeed
+          ? '<span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-400 border border-indigo-800">Need</span>'
+          : '<span class="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">Want</span>';
+
+        const isHighlight = highlightCat === catKey ? 'border-indigo-500 ring-1 ring-indigo-500 bg-slate-900/90' : 'border-slate-800 bg-slate-950';
+
+        return `
+          <div class="p-3 rounded-xl border ${isHighlight} space-y-1.5 transition-all" id="cat-card-row-${catKey.replace(/[^a-zA-Z0-9]/g, '-')}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-base">${catMeta.icon}</span>
+                <span class="font-bold text-slate-200">${catKey}</span>
+                ${bucketBadge}
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] border border-slate-700" data-adj-cat="${catKey}" data-adj-amt="500">+500</button>
+                <button type="button" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] border border-slate-700" data-adj-cat="${catKey}" data-adj-amt="1000">+1k</button>
+                <div class="flex items-center gap-1 w-28 ml-1">
+                  <span class="text-slate-500 font-mono">₹</span>
+                  <input type="number" data-cat-modal-input="${catKey}" value="${currentCap}" step="500" min="0" required
+                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-100 font-mono-num text-right focus:outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+                </div>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-500 pl-6 leading-tight">${catMeta.examples}</p>
+          </div>
+        `;
+      }).join('');
+
+      updateCatLimitsModalTotals();
+
+      if (highlightCat) {
+        setTimeout(() => {
+          const rowId = `cat-card-row-${highlightCat.replace(/[^a-zA-Z0-9]/g, '-')}`;
+          const el = document.getElementById(rowId);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+
+    function updateCatLimitsModalTotals() {
+      let totalLiving = 0;
+      let totalNeeds = 0;
+      let totalWants = 0;
+      const salary = appState.config.takeHomeSalary || 92000;
+
+      document.querySelectorAll('[data-cat-modal-input]').forEach(input => {
+        const catKey = input.getAttribute('data-cat-modal-input');
+        const val = parseFloat(input.value) || 0;
+        totalLiving += val;
+        const meta = MASTER_CATEGORIES[catKey];
+        if (meta && meta.bucket === 'NEED_ESSENTIAL') totalNeeds += val;
+        else totalWants += val;
+      });
+
+      const surplus = salary - totalLiving;
+
+      document.getElementById('modal-total-living-cap').textContent = fmtINR(totalLiving);
+      document.getElementById('modal-needs-total-cap').textContent = fmtINR(totalNeeds);
+      document.getElementById('modal-wants-total-cap').textContent = fmtINR(totalWants);
+      document.getElementById('modal-surplus-total-cap').textContent = fmtINR(surplus);
+    }
+
+    catLimitsInputsList.addEventListener('input', updateCatLimitsModalTotals);
+
+    catLimitsInputsList.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-adj-cat]');
+      if (!btn) return;
+      const catKey = btn.getAttribute('data-adj-cat');
+      const amt = parseFloat(btn.getAttribute('data-adj-amt'));
+      const input = document.querySelector(`[data-cat-modal-input="${catKey}"]`);
+      if (input) {
+        input.value = Math.max(0, (parseFloat(input.value) || 0) + amt);
+        updateCatLimitsModalTotals();
+      }
+    });
+
+    openCatLimitsBtn.addEventListener('click', () => {
+      populateCatLimitsModal();
+      catLimitsModal.classList.remove('hidden');
+    });
+
+    catLimitsCloseBtn.addEventListener('click', () => catLimitsModal.classList.add('hidden'));
+    catLimitsCancelBtn.addEventListener('click', () => catLimitsModal.classList.add('hidden'));
+
+    catLimitsResetBtn.addEventListener('click', () => {
+      Object.keys(MASTER_CATEGORIES).forEach(catKey => {
+        const input = document.querySelector(`[data-cat-modal-input="${catKey}"]`);
+        if (input) input.value = MASTER_CATEGORIES[catKey].defaultBudget;
+      });
+      updateCatLimitsModalTotals();
+      showToast('Reset inputs to default category caps.');
+    });
+
+    catLimitsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newBudgets = {};
+      document.querySelectorAll('[data-cat-modal-input]').forEach(input => {
+        const catKey = input.getAttribute('data-cat-modal-input');
+        newBudgets[catKey] = parseFloat(input.value) || 0;
+      });
+
+      appState.config.categoryBudgets = newBudgets;
+      saveState();
+      renderApp();
+      catLimitsModal.classList.add('hidden');
+      showToast('Category monthly budget limits saved successfully!');
+    });
+
+    // Delegate edit click from individual category cards in Panel 6
+    document.getElementById('category-bars-container').addEventListener('click', (e) => {
+      const editBtn = e.target.closest('[data-edit-cat]');
+      if (!editBtn) return;
+      const catName = editBtn.getAttribute('data-edit-cat');
+      populateCatLimitsModal(catName);
+      catLimitsModal.classList.remove('hidden');
+    });
+
+
+    // CREDIT CARD SETTLEMENT PLANNER LOGIC
+    const ccSettleModal = document.getElementById('cc-settle-modal');
+    const ccSettleCloseBtn = document.getElementById('cc-settle-close-btn');
+    const ccSettleCancelBtn = document.getElementById('cc-settle-cancel-btn');
+    const ccSettleForm = document.getElementById('cc-settle-form');
+    const settleTargetCard = document.getElementById('settle-target-card');
+    const settleCardNameLabel = document.getElementById('settle-card-name-label');
+    const settleCardDueLabel = document.getElementById('settle-card-due-label');
+    const settleRecRoutingLabel = document.getElementById('settle-rec-routing-label');
+    const settleAmountInput = document.getElementById('settle-amount');
+    const settleDateInput = document.getElementById('settle-date');
+    const settleSourceBank = document.getElementById('settle-source-bank');
+    const settleChannel = document.getElementById('settle-channel');
+    const settlePostBalPreview = document.getElementById('settle-post-bal-preview');
+
+    function openSettleModal(cardKey, dueAmount, cardName) {
+      const data = computeEngine();
+      settleTargetCard.value = cardKey;
+      settleCardNameLabel.textContent = cardName;
+      settleCardDueLabel.textContent = fmtINR(dueAmount);
+      settleAmountInput.value = dueAmount;
+      settleDateInput.value = new Date().toISOString().split('T')[0];
+
+      // Recommendation logic
+      const fedBal = data.bankStats.FEDERAL_SAVINGS.current;
+      const hdfcBal = data.bankStats.HDFC_SALARY.current;
+
+      if (fedBal >= (dueAmount + 5000)) {
+        settleSourceBank.value = 'FEDERAL_SAVINGS';
+        settleChannel.value = 'GPay (Federal Bank UPI)';
+        settleRecRoutingLabel.textContent = 'Federal Bank (UPI Active) — Operational Floor Protected';
+      } else {
+        settleSourceBank.value = 'HDFC_SALARY';
+        settleChannel.value = 'HDFC NetBanking (No UPI)';
+        settleRecRoutingLabel.textContent = 'HDFC Salary A/C — Protects Federal Bank Cash';
+      }
+
+      updateSettlePostBal();
+      ccSettleModal.classList.remove('hidden');
+    }
+
+    function updateSettlePostBal() {
+      const data = computeEngine();
+      const bank = settleSourceBank.value;
+      const amt = parseFloat(settleAmountInput.value) || 0;
+      const currentBankBal = bank === 'FEDERAL_SAVINGS' ? data.bankStats.FEDERAL_SAVINGS.current : data.bankStats.HDFC_SALARY.current;
+      const residual = currentBankBal - amt;
+
+      settlePostBalPreview.textContent = `${fmtINR(residual)} remaining in ${bank === 'FEDERAL_SAVINGS' ? 'Federal' : 'HDFC'}`;
+      if (residual < 5000 && bank === 'FEDERAL_SAVINGS') {
+        settlePostBalPreview.className = 'font-bold font-mono-num text-amber-400';
+      } else if (residual < 0) {
+        settlePostBalPreview.className = 'font-bold font-mono-num text-rose-400';
+      } else {
+        settlePostBalPreview.className = 'font-bold font-mono-num text-emerald-400';
+      }
+    }
+
+    settleAmountInput.addEventListener('input', updateSettlePostBal);
+    settleSourceBank.addEventListener('change', () => {
+      if (settleSourceBank.value === 'FEDERAL_SAVINGS') {
+        settleChannel.value = 'GPay (Federal Bank UPI)';
+      } else {
+        settleChannel.value = 'HDFC NetBanking (No UPI)';
+      }
+      updateSettlePostBal();
+    });
+
+    ccSettleCloseBtn.addEventListener('click', () => ccSettleModal.classList.add('hidden'));
+    ccSettleCancelBtn.addEventListener('click', () => ccSettleModal.classList.add('hidden'));
+
+    ccSettleForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const cardKey = settleTargetCard.value;
+      const amt = parseFloat(settleAmountInput.value);
+      const date = settleDateInput.value;
+      const sourceBank = settleSourceBank.value;
+      const channel = settleChannel.value;
+
+      if (isNaN(amt) || amt <= 0 || !date) {
+        showToast('Please enter a valid settlement amount and date.', false);
+        return;
+      }
+
+      const cardMeta = appState.cards[cardKey] || { name: cardKey };
+
+      const settlementTx = {
+        id: 'tx-settle-' + Date.now(),
+        date: date,
+        type: 'DEBT_REPAYMENT',
+        source: sourceBank,
+        destination: cardKey,
+        channel: channel,
+        category: 'Card Bill Payment',
+        budgetBucket: 'NOT_APPLICABLE',
+        amount: amt,
+        desc: `Bill Settlement for ${cardMeta.name} from ${sourceBank === 'FEDERAL_SAVINGS' ? 'Federal Bank' : 'HDFC Salary'}`
+      };
+
+      appState.transactions.unshift(settlementTx);
+      saveState();
+      renderApp();
+      ccSettleModal.classList.add('hidden');
+      showToast(`Settled ${fmtINR(amt)} on ${cardMeta.name}! Available credit limit restored.`);
+    });
+
+    // Delegate quick settle button from card containers in Panel 3
+    document.getElementById('cc-cards-container').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-settle-card]');
+      if (!btn) return;
+      const cardKey = btn.getAttribute('data-settle-card');
+      const due = parseFloat(btn.getAttribute('data-card-due')) || 0;
+      const name = btn.getAttribute('data-card-name');
+      openSettleModal(cardKey, due, name);
+    });
+
+    // Initial load
+    renderApp();
+  </script>
+</body>
+</html>
