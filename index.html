@@ -83,11 +83,6 @@
           <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           <span class="hidden sm:inline">Settings & Balances</span>
         </button>
-
-        <button id="btnPwaInstall" type="button" class="hidden inline-flex items-center px-2.5 py-2 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600/30 transition">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          Install
-        </button>
       </div>
     </div>
   </header>
@@ -218,7 +213,7 @@
           <div id="waterfallFdBalance" class="text-2xl font-bold font-mono text-white mt-2">₹30,000</div>
           <div class="mt-3 text-xs space-y-1 text-slate-400 font-mono border-t border-slate-800 pt-2">
             <div class="flex justify-between"><span>Status:</span><span class="text-slate-300">Collateral Pledged</span></div>
-            <div class="flex justify-between"><span>Credit Line:</span><span id="waterfallSignetLine" class="text-indigo-300">₹24,000</span></div>
+            <div class="flex justify-between"><span>Credit Line:</span><span id="waterfallSignetLine" class="text-indigo-300">₹30,000</span></div>
           </div>
         </div>
 
@@ -260,7 +255,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="font-semibold text-white text-sm">Federal Bank Signet (Secured)</h3>
-                <p id="labelSignetLimit" class="text-xs text-slate-400 font-mono">Limit: ₹24,000</p>
+                <p id="labelSignetLimit" class="text-xs text-slate-400 font-mono">Limit: ₹30,000</p>
               </div>
               <span id="curBadgeSignet" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0.0% CUR</span>
             </div>
@@ -276,8 +271,8 @@
             </div>
 
             <div class="mt-2 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span id="labelSignetSafe">Safe Cap (30%): ₹7,200</span>
-              <span id="availSignet">Available: ₹24,000</span>
+              <span id="labelSignetSafe">Safe Cap (30%): ₹9,000</span>
+              <span id="availSignet">Available: ₹30,000</span>
             </div>
 
             <div class="mt-3 p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 space-y-1">
@@ -303,7 +298,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="font-semibold text-white text-sm">Paytm AU RuPay (Unsecured)</h3>
-                <p id="labelAuLimit" class="text-xs text-slate-400 font-mono">Limit: ₹90,000</p>
+                <p id="labelAuLimit" class="text-xs text-slate-400 font-mono">Limit: ₹45,000</p>
               </div>
               <span id="curBadgeAu" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0.0% CUR</span>
             </div>
@@ -319,8 +314,8 @@
             </div>
 
             <div class="mt-2 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span id="labelAuSafe">Safe Cap (30%): ₹27,000</span>
-              <span id="availAu">Available: ₹90,000</span>
+              <span id="labelAuSafe">Safe Cap (30%): ₹13,500</span>
+              <span id="availAu">Available: ₹45,000</span>
             </div>
 
             <div class="mt-3 p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 space-y-1">
@@ -466,7 +461,7 @@
           <!-- 50% Needs -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">50% Needs (Cap: <span id="bdownNeedsCap">₹46,000</span>)</span>
+              <span class="text-slate-300">50% Needs (Cap: <span id="bdownNeedsCap">₹70,000</span>)</span>
               <span id="bdownNeedsVal" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -481,7 +476,7 @@
           <!-- 30% Wants -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">30% Wants (Cap: <span id="bdownWantsCap">₹27,600</span>)</span>
+              <span class="text-slate-300">30% Wants (Cap: <span id="bdownWantsCap">₹42,000</span>)</span>
               <span id="bdownWantsVal" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -496,7 +491,7 @@
           <!-- 20% Retention -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">20% Surplus Target (Min: <span id="bdownSurplusCap">₹18,400</span>)</span>
+              <span class="text-slate-300">20% Surplus Target (Min: <span id="bdownSurplusCap">₹28,000</span>)</span>
               <span id="bdownSurplusVal" class="text-emerald-400 font-semibold font-mono">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -529,8 +524,8 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
           <span class="text-xs text-slate-400 block mb-1">Taxable Salary Base</span>
-          <div id="taxSalaryVal" class="text-xl font-bold font-mono text-white">₹11,04,000</div>
-          <p class="text-[11px] text-slate-500 mt-1">₹11.79L CTC less ₹75,000 std deduction</p>
+          <div id="taxSalaryVal" class="text-xl font-bold font-mono text-white">₹16,05,000</div>
+          <p class="text-[11px] text-slate-500 mt-1">₹16.80L CTC less ₹75,000 std deduction</p>
         </div>
 
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
@@ -540,9 +535,9 @@
         </div>
 
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 block mb-1">Headroom Below ₹12L</span>
-          <div id="taxSafetyBuffer" class="text-xl font-bold font-mono text-emerald-400">₹93,900</div>
-          <p class="text-[11px] text-slate-500 mt-1">Safe zone before marginal tax cliff</p>
+          <span class="text-xs text-slate-400 block mb-1">Status vs ₹12L Exemption</span>
+          <div id="taxSafetyBuffer" class="text-xl font-bold font-mono text-rose-400">Exceeds Cap</div>
+          <p class="text-[11px] text-slate-500 mt-1">Above Section 87A full rebate ceiling</p>
         </div>
       </div>
     </section>
@@ -1027,7 +1022,7 @@
      * Clean slate initialization (zero preset transactions).
      */
 
-    const STORAGE_KEY = 'wealth_engine_state_clean_v1';
+    const STORAGE_KEY = 'WEALTH_TELEMETRY_ENGINE_STATE_V2';
 
     // 10 Master Categories Taxonomy
     const MASTER_CATEGORIES = [
@@ -1082,21 +1077,21 @@
 
     // Default Configuration with Zero Transactions
     const DEFAULT_STATE = {
-      version: 3,
+      version: 4,
       selectedPeriod: getCurrentCalendarYM(),
       activeCategoryFilter: 'ALL',
       accounts: {
-        hdfcOpening: 45000,
-        federalOpening: 17500,
+        hdfcOpening: 65000,
+        federalOpening: 25000,
         fdOpening: 30000,
         ppfOpening: 15000,
         epfOpening: 40000,
         equityOpening: 25000
       },
       settings: {
-        monthlySalary: 92000,
-        signetLimit: 24000,
-        auLimit: 90000,
+        monthlySalary: 140000,
+        signetLimit: 30000,
+        auLimit: 45000,
         safeCurPercent: 30,
         needsRatio: 50,
         wantsRatio: 30,
@@ -1308,8 +1303,8 @@
       const totalCCDue = dueSignet + dueAu;
       const totalNetWorth = spendableCash + balFdSignet + balPpf + balEpf + balEquity - totalCCDue;
 
-      const limitSignet = Number(cfg.signetLimit) || 24000;
-      const limitAu = Number(cfg.auLimit) || 90000;
+      const limitSignet = Number(cfg.signetLimit) || 30000;
+      const limitAu = Number(cfg.auLimit) || 45000;
       const curSignet = limitSignet > 0 ? (dueSignet / limitSignet) * 100 : 0;
       const curAu = limitAu > 0 ? (dueAu / limitAu) * 100 : 0;
       const totalLimit = limitSignet + limitAu;
@@ -1323,7 +1318,7 @@
       });
 
       const totalLivingSpend = needsSpend + wantsSpend;
-      const monthlySalary = Number(cfg.monthlySalary) || 92000;
+      const monthlySalary = Number(cfg.monthlySalary) || 140000;
       const capNeeds = (monthlySalary * (cfg.needsRatio || 50)) / 100;
       const capWants = (monthlySalary * (cfg.wantsRatio || 30)) / 100;
       const targetSurplus = (monthlySalary * (cfg.surplusRatio || 20)) / 100;
@@ -1529,7 +1524,14 @@
       // Panel 6: Tax Sentry
       document.getElementById('taxSalaryVal').textContent = formatInr(data.netTaxableSalary);
       document.getElementById('taxNonSalaryInterest').textContent = formatInr(data.fdInterestYearly);
-      document.getElementById('taxSafetyBuffer').textContent = formatInr(data.taxSafetyBuffer);
+      const taxSafetyEl = document.getElementById('taxSafetyBuffer');
+      if (data.taxSafetyBuffer > 0) {
+        taxSafetyEl.textContent = formatInr(data.taxSafetyBuffer);
+        taxSafetyEl.className = 'text-xl font-bold font-mono text-emerald-400';
+      } else {
+        taxSafetyEl.textContent = 'Exceeds Cap';
+        taxSafetyEl.className = 'text-xl font-bold font-mono text-rose-400';
+      }
 
       // Panel 7: Velocity & Burn Rate
       document.getElementById('velocityDailyBurn').textContent = `${formatInr(data.dailyBurn)} / day`;
@@ -1897,9 +1899,9 @@
         appState.accounts.epfOpening = parseFloat(document.getElementById('settingEpfOpening').value) || 0;
         appState.accounts.equityOpening = parseFloat(document.getElementById('settingEquityOpening').value) || 0;
 
-        appState.settings.signetLimit = parseFloat(document.getElementById('settingSignetLimit').value) || 24000;
-        appState.settings.auLimit = parseFloat(document.getElementById('settingAuLimit').value) || 90000;
-        appState.settings.monthlySalary = parseFloat(document.getElementById('settingMonthlySalary').value) || 92000;
+        appState.settings.signetLimit = parseFloat(document.getElementById('settingSignetLimit').value) || 30000;
+        appState.settings.auLimit = parseFloat(document.getElementById('settingAuLimit').value) || 45000;
+        appState.settings.monthlySalary = parseFloat(document.getElementById('settingMonthlySalary').value) || 140000;
         appState.settings.safeCurPercent = parseFloat(document.getElementById('settingSafeCur').value) || 30;
 
         saveState();
