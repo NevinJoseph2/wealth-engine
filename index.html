@@ -755,7 +755,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Amount (₹)</label>
-            <input type="number" id="txAmount" required min="1" step="any" placeholder="e.g. 1500" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono font-semibold">
+            <input type="number" id="txAmount" required min="0.01" step="any" placeholder="e.g. 1500" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono font-semibold">
           </div>
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Payment Rail / Channel</label>
@@ -847,7 +847,7 @@
 
         <div>
           <label class="block text-xs font-medium text-slate-300 mb-1">Outstanding Balance / Amount to Settle</label>
-          <input type="number" id="settleAmount" required min="1" step="any" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <input type="number" id="settleAmount" required min="0.01" step="any" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
 
         <div>
@@ -941,11 +941,11 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">HDFC Salary Opening (₹)</label>
-              <input type="number" id="settingHdfcOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingHdfcOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Federal Savings Opening (₹)</label>
-              <input type="number" id="settingFederalOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingFederalOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
         </div>
@@ -956,19 +956,19 @@
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">FD Signet Lien (₹)</label>
-              <input type="number" id="settingFdOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingFdOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">HDFC PPF Corpus (₹)</label>
-              <input type="number" id="settingPpfOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingPpfOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">EPF Corpus (₹)</label>
-              <input type="number" id="settingEpfOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingEpfOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Equity / MF Basis (₹)</label>
-              <input type="number" id="settingEquityOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingEquityOpening" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
         </div>
@@ -979,21 +979,21 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Federal Signet Limit (₹)</label>
-              <input type="number" id="settingSignetLimit" required min="1000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingSignetLimit" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Paytm AU RuPay Limit (₹)</label>
-              <input type="number" id="settingAuLimit" required min="1000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingAuLimit" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Monthly Salary Baseline (₹)</label>
-              <input type="number" id="settingMonthlySalary" required min="10000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingMonthlySalary" required min="0" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-300 mb-1">Safe Utilization Limit (%)</label>
-              <input type="number" id="settingSafeCur" required min="10" max="90" step="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <input type="number" id="settingSafeCur" required min="1" max="100" step="any" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
             </div>
           </div>
         </div>
@@ -2110,7 +2110,7 @@
           </div>
           <div class="flex items-center space-x-2">
             <span class="text-xs font-mono text-slate-400">₹</span>
-            <input type="number" id="capInput_${c.id}" value="${currentCap}" min="0" step="500" 
+            <input type="number" id="capInput_${c.id}" value="${currentCap}" min="0" step="any" 
               class="w-28 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono font-bold text-right focus:outline-none focus:ring-2 focus:ring-indigo-500"
               oninput="recalcModalCaps()">
             <button type="button" onclick="adjustModalInput('capInput_${c.id}', 500)" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] font-mono rounded text-slate-300">+500</button>
