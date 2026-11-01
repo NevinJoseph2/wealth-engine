@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Wealth Telemetry & Liquidity Engine</title>
   
-  <!-- PWA Metadata & Relative Scope for GitHub Pages -->
+  <!-- PWA & Mobile Web App Meta -->
   <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="WealthEngine">
-  
-  <!-- Self-Contained Data-URI PWA Web Manifest -->
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Wealth Telemetry Engine","short_name":"WealthEngine","description":"Zero-leakage personal finance and liquidity telemetry engine","start_url":"./","scope":"./","display":"standalone","background_color":"#0f172a","theme_color":"#0f172a","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%234f46e5%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>⚡</text></svg>","sizes":"192x192 512x512","type":"image/svg+xml","purpose":"any maskable"}]}'>
+  <link rel="manifest" href="manifest.json">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -43,37 +42,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    /* Smooth custom scrollbars */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
-    /* Hide number spinner controls */
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: "tnum" 1; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
     input[type=number]::-webkit-inner-spin-button, 
-    input[type=number]::-webkit-outer-spin-button { 
-      -webkit-appearance: none; 
-      margin: 0; 
-    }
-    input[type=number] {
-      -moz-appearance: textfield;
-    }
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type=number] { -moz-appearance: textfield; }
   </style>
 </head>
 
@@ -89,9 +66,9 @@
         <div>
           <div class="flex items-center space-x-2">
             <h1 class="text-base font-bold tracking-tight text-white sm:text-lg">Wealth Telemetry</h1>
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active V2</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Clean Engine</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Dual-Bank Waterfall &bull; RuPay Telemetry &bull; NTR Sec 115BAC</p>
+          <p class="text-xs text-slate-400 hidden sm:block">Zero-Leakage Indian Banking & Sovereign Balance Sheet</p>
         </div>
       </div>
 
@@ -104,7 +81,7 @@
 
         <button id="btnOpenSettings" type="button" class="inline-flex items-center px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs sm:text-sm font-medium border border-slate-700 transition">
           <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          <span class="hidden sm:inline">Settings & Limits</span>
+          <span class="hidden sm:inline">Settings & Balances</span>
         </button>
 
         <button id="btnPwaInstall" type="button" class="hidden inline-flex items-center px-2.5 py-2 rounded-lg bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600/30 transition">
@@ -130,7 +107,7 @@
         </button>
       </div>
 
-      <!-- Live Quick Badges -->
+      <!-- Quick Metrics Strip -->
       <div class="flex items-center space-x-3 text-xs">
         <div class="flex items-center space-x-1.5 bg-slate-800/70 px-2.5 py-1 rounded-md border border-slate-700/60">
           <span class="text-slate-400">Inflow:</span>
@@ -141,14 +118,14 @@
           <span id="navPeriodOutflow" class="font-mono font-semibold text-rose-400">₹0</span>
         </div>
         <div class="hidden sm:flex items-center space-x-1.5 bg-slate-800/70 px-2.5 py-1 rounded-md border border-slate-700/60">
-          <span class="text-slate-400">Net Surplus:</span>
+          <span class="text-slate-400">Period Net:</span>
           <span id="navPeriodSurplus" class="font-mono font-semibold text-indigo-400">₹0</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MAIN DASHBOARD CONTENT -->
+  <!-- MAIN DASHBOARD -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6 flex-1 w-full">
 
     <!-- KPI STRIP -->
@@ -159,25 +136,25 @@
           <span class="text-emerald-400 font-mono text-[10px]">LIQUID</span>
         </div>
         <div id="kpiSpendableCash" class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">₹0</div>
-        <p class="text-[11px] text-slate-500 mt-1">HDFC Salary + Federal Savings</p>
+        <p class="text-[11px] text-slate-500 mt-1">HDFC Salary + Federal Bank</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
-          <span>Card Liabilities</span>
-          <span id="kpiCurPill" class="text-emerald-400 font-mono text-[10px]">CUR: 0%</span>
+          <span>Total CC Liabilities</span>
+          <span id="kpiCurPill" class="text-emerald-400 font-mono text-[10px]">CUR: 0.0%</span>
         </div>
         <div id="kpiTotalCCDue" class="text-xl sm:text-2xl font-bold font-mono text-amber-400 tracking-tight">₹0</div>
-        <p class="text-[11px] text-slate-500 mt-1">Federal Signet + Paytm AU</p>
+        <p class="text-[11px] text-slate-500 mt-1">Signet + Paytm AU RuPay</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs mb-1">
           <span>Month Living Spend</span>
-          <span id="kpiBudgetPacePill" class="text-indigo-400 font-mono text-[10px]">PACED</span>
+          <span id="kpiBudgetPacePill" class="text-indigo-400 font-mono text-[10px]">CLEAN</span>
         </div>
         <div id="kpiMonthSpend" class="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">₹0</div>
-        <p class="text-[11px] text-slate-500 mt-1">Cap: <span id="kpiBudgetCap" class="font-mono">₹54,500</span></p>
+        <p class="text-[11px] text-slate-500 mt-1">Living Cap: <span id="kpiBudgetCap" class="font-mono">₹54,500</span></p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm">
@@ -186,7 +163,7 @@
           <span class="text-indigo-400 font-mono text-[10px]">SOVEREIGN</span>
         </div>
         <div id="kpiNetWorth" class="text-xl sm:text-2xl font-bold font-mono text-emerald-400 tracking-tight">₹0</div>
-        <p class="text-[11px] text-slate-500 mt-1">Liquid + Locked FD + PPF + EPF</p>
+        <p class="text-[11px] text-slate-500 mt-1">Liquid + FD + PPF + EPF + Equity</p>
       </div>
     </div>
 
@@ -198,54 +175,54 @@
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">01</span>
             <h2 class="text-base font-bold text-white tracking-tight">Bank Reconciliation & Liquidity Waterfall</h2>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">Strict double-entry ledger ensuring zero leakage between operational and sovereign tiers</p>
+          <p class="text-xs text-slate-400 mt-0.5">Strict double-entry ledger ensuring zero leakage across operational and locked accounts</p>
         </div>
-        <span class="text-xs text-slate-400 font-mono self-start sm:self-auto">Status: <span class="text-emerald-400 font-semibold">RECONCILED ✓</span></span>
+        <button type="button" onclick="openSettingsModal()" class="text-xs font-mono text-indigo-400 hover:text-indigo-300 transition self-start sm:self-auto">
+          ✏️ Edit Balances
+        </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
         <!-- HDFC Salary -->
         <div class="bg-slate-850 border border-slate-750/80 rounded-xl p-4 relative overflow-hidden">
-          <div class="absolute -right-3 -top-3 w-16 h-16 bg-blue-600/5 rounded-full pointer-events-none"></div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold text-blue-400 tracking-wider">HDFC SALARY A/C</span>
             <span class="text-[10px] font-mono px-1.5 py-0.5 bg-blue-500/10 text-blue-300 rounded border border-blue-500/20">NO UPI</span>
           </div>
           <div id="waterfallHdfcBalance" class="text-2xl font-bold font-mono text-white mt-2">₹0</div>
           <div class="mt-3 text-xs space-y-1 text-slate-400 font-mono border-t border-slate-800 pt-2">
-            <div class="flex justify-between"><span>Period Inflows:</span><span id="waterfallHdfcIn" class="text-emerald-400">+₹0</span></div>
-            <div class="flex justify-between"><span>Internal Routed:</span><span id="waterfallHdfcOut" class="text-rose-400">-₹0</span></div>
+            <div class="flex justify-between"><span>Period Inflow:</span><span id="waterfallHdfcIn" class="text-emerald-400">+₹0</span></div>
+            <div class="flex justify-between"><span>Period Outflow:</span><span id="waterfallHdfcOut" class="text-rose-400">-₹0</span></div>
           </div>
         </div>
 
         <!-- Federal Savings -->
         <div class="bg-slate-850 border border-slate-750/80 rounded-xl p-4 relative overflow-hidden">
-          <div class="absolute -right-3 -top-3 w-16 h-16 bg-emerald-600/5 rounded-full pointer-events-none"></div>
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold text-emerald-400 tracking-wider">FEDERAL SAVINGS</span>
             <span class="text-[10px] font-mono px-1.5 py-0.5 bg-emerald-500/10 text-emerald-300 rounded border border-emerald-500/20">ACTIVE UPI</span>
           </div>
           <div id="waterfallFederalBalance" class="text-2xl font-bold font-mono text-white mt-2">₹0</div>
           <div class="mt-3 text-xs space-y-1 text-slate-400 font-mono border-t border-slate-800 pt-2">
-            <div class="flex justify-between"><span>Inflows / Transfers:</span><span id="waterfallFedIn" class="text-emerald-400">+₹0</span></div>
-            <div class="flex justify-between"><span>Living Outflows:</span><span id="waterfallFedOut" class="text-rose-400">-₹0</span></div>
+            <div class="flex justify-between"><span>Period Inflow:</span><span id="waterfallFedIn" class="text-emerald-400">+₹0</span></div>
+            <div class="flex justify-between"><span>Period Outflow:</span><span id="waterfallFedOut" class="text-rose-400">-₹0</span></div>
           </div>
         </div>
 
-        <!-- Locked Assets -->
+        <!-- Locked Collateral (FD Signet Lien) -->
         <div class="bg-slate-850 border border-slate-750/80 rounded-xl p-4">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-purple-400 tracking-wider">LOCKED COLLATERAL</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.5 bg-purple-500/10 text-purple-300 rounded border border-purple-500/20">7.0% LIEN</span>
+            <span class="text-xs font-semibold text-purple-400 tracking-wider">FD SIGNET LIEN</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 bg-purple-500/10 text-purple-300 rounded border border-purple-500/20">7.0% p.a.</span>
           </div>
           <div id="waterfallFdBalance" class="text-2xl font-bold font-mono text-white mt-2">₹30,000</div>
           <div class="mt-3 text-xs space-y-1 text-slate-400 font-mono border-t border-slate-800 pt-2">
-            <div class="flex justify-between"><span>Asset:</span><span class="text-slate-300">FD Signet Lien</span></div>
-            <div class="flex justify-between"><span>Credit Line:</span><span class="text-indigo-300">₹24,000 Backed</span></div>
+            <div class="flex justify-between"><span>Status:</span><span class="text-slate-300">Collateral Pledged</span></div>
+            <div class="flex justify-between"><span>Credit Line:</span><span id="waterfallSignetLine" class="text-indigo-300">₹24,000</span></div>
           </div>
         </div>
 
-        <!-- Sovereign Long-Term -->
+        <!-- Sovereign Long-Term Reserves -->
         <div class="bg-slate-850 border border-slate-750/80 rounded-xl p-4">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold text-amber-400 tracking-wider">SOVEREIGN RESERVES</span>
@@ -253,8 +230,8 @@
           </div>
           <div id="waterfallSovereignTotal" class="text-2xl font-bold font-mono text-white mt-2">₹0</div>
           <div class="mt-3 text-xs space-y-1 text-slate-400 font-mono border-t border-slate-800 pt-2">
-            <div class="flex justify-between"><span>HDFC PPF (7.1%):</span><span id="waterfallPpfVal" class="text-slate-300">₹0</span></div>
-            <div class="flex justify-between"><span>EPF Corpus (8.25%):</span><span id="waterfallEpfVal" class="text-slate-300">₹0</span></div>
+            <div class="flex justify-between"><span>HDFC PPF:</span><span id="waterfallPpfVal" class="text-slate-300">₹0</span></div>
+            <div class="flex justify-between"><span>EPF + Equity:</span><span id="waterfallEpfVal" class="text-slate-300">₹0</span></div>
           </div>
         </div>
       </div>
@@ -266,12 +243,12 @@
         <div>
           <div class="flex items-center space-x-2">
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">02</span>
-            <h2 class="text-base font-bold text-white tracking-tight">Credit Card Telemetry, Utilization & Settlement</h2>
+            <h2 class="text-base font-bold text-white tracking-tight">Credit Card Telemetry, CUR & Settlements</h2>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">30% safe utilization sentry with pre-statement settlement planning</p>
+          <p class="text-xs text-slate-400 mt-0.5">Automated 30% utilization guardrails with liquidity safeguarding</p>
         </div>
         <div class="flex items-center space-x-2 text-xs font-mono">
-          <span class="text-slate-400">Combined CUR:</span>
+          <span class="text-slate-400">Combined Portfolio CUR:</span>
           <span id="panel2CombinedCur" class="font-bold text-emerald-400">0.0%</span>
         </div>
       </div>
@@ -283,9 +260,9 @@
             <div class="flex items-center justify-between">
               <div>
                 <h3 class="font-semibold text-white text-sm">Federal Bank Signet (Secured)</h3>
-                <p class="text-xs text-slate-400 font-mono">FD-Backed Limit: ₹24,000</p>
+                <p id="labelSignetLimit" class="text-xs text-slate-400 font-mono">Limit: ₹24,000</p>
               </div>
-              <span id="curBadgeSignet" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0% CUR</span>
+              <span id="curBadgeSignet" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0.0% CUR</span>
             </div>
 
             <div class="mt-4 flex items-baseline justify-between font-mono">
@@ -299,11 +276,10 @@
             </div>
 
             <div class="mt-2 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>Safe Cap: <strong class="text-slate-200">₹7,200 (30%)</strong></span>
+              <span id="labelSignetSafe">Safe Cap (30%): ₹7,200</span>
               <span id="availSignet">Available: ₹24,000</span>
             </div>
 
-            <!-- Statement Dates & Alert -->
             <div class="mt-3 p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 space-y-1">
               <div class="flex justify-between">
                 <span>Statement Date: <strong class="text-white">18th</strong></span>
@@ -314,7 +290,7 @@
           </div>
 
           <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-xs text-slate-400">Recommends: <strong class="text-slate-300">Federal UPI Paydown</strong></span>
+            <span class="text-xs text-slate-400">Routing: <strong class="text-slate-300">Federal UPI Paydown</strong></span>
             <button type="button" onclick="openSettleModal('CC_FEDERAL_SIGNET')" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition active:scale-95">
               ⚡ Settle Bill
             </button>
@@ -326,10 +302,10 @@
           <div>
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="font-semibold text-white text-sm">Paytm AU Bank RuPay (Unsecured)</h3>
-                <p class="text-xs text-slate-400 font-mono">Credit Limit: ₹90,000</p>
+                <h3 class="font-semibold text-white text-sm">Paytm AU RuPay (Unsecured)</h3>
+                <p id="labelAuLimit" class="text-xs text-slate-400 font-mono">Limit: ₹90,000</p>
               </div>
-              <span id="curBadgeAu" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0% CUR</span>
+              <span id="curBadgeAu" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">0.0% CUR</span>
             </div>
 
             <div class="mt-4 flex items-baseline justify-between font-mono">
@@ -343,11 +319,10 @@
             </div>
 
             <div class="mt-2 flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>Safe Cap: <strong class="text-slate-200">₹27,000 (30%)</strong></span>
+              <span id="labelAuSafe">Safe Cap (30%): ₹27,000</span>
               <span id="availAu">Available: ₹90,000</span>
             </div>
 
-            <!-- Statement Dates & Alert -->
             <div class="mt-3 p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 text-xs text-slate-300 space-y-1">
               <div class="flex justify-between">
                 <span>Statement Date: <strong class="text-white">22nd</strong></span>
@@ -358,7 +333,7 @@
           </div>
 
           <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-xs text-slate-400">Recommends: <strong class="text-slate-300">Federal / HDFC Paydown</strong></span>
+            <span class="text-xs text-slate-400">Routing: <strong class="text-slate-300">Federal / HDFC Paydown</strong></span>
             <button type="button" onclick="openSettleModal('CC_PAYTM_AU')" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition active:scale-95">
               ⚡ Settle Bill
             </button>
@@ -367,26 +342,26 @@
       </div>
     </section>
 
-    <!-- PANEL 3: MASTER SPEND CATEGORIES & BUDGET VARIANCE ENGINE -->
+    <!-- PANEL 3: 10 MASTER SPEND CATEGORIES & BUDGET VARIANCE ENGINE -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
         <div>
           <div class="flex items-center space-x-2">
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">03</span>
-            <h2 class="text-base font-bold text-white tracking-tight">Master Spend Categories & Budget Variance Engine</h2>
+            <h2 class="text-base font-bold text-white tracking-tight">10 Master Spend Categories & Budget Variance Engine</h2>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">10 Master categories with active variance telemetry and live limit edits</p>
+          <p class="text-xs text-slate-400 mt-0.5">Category variance telemetry with direct inline budget cap adjustments</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
           <!-- Filter Pills -->
           <div class="inline-flex rounded-lg bg-slate-800 p-0.5 border border-slate-700 text-xs font-medium">
             <button type="button" id="btnFilterCatAll" onclick="setCategoryFilter('ALL')" class="px-2.5 py-1 rounded-md bg-indigo-600 text-white shadow-sm transition">All</button>
-            <button type="button" id="btnFilterCatNeeds" onclick="setCategoryFilter('NEED')" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition">Needs Only</button>
-            <button type="button" id="btnFilterCatWants" onclick="setCategoryFilter('WANT')" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition">Wants Only</button>
+            <button type="button" id="btnFilterCatNeeds" onclick="setCategoryFilter('NEED')" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition">Needs</button>
+            <button type="button" id="btnFilterCatWants" onclick="setCategoryFilter('WANT')" class="px-2.5 py-1 rounded-md text-slate-300 hover:text-white transition">Wants</button>
           </div>
 
-          <button type="button" id="btnOpenCategoryEditor" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition active:scale-95">
+          <button type="button" onclick="openCategoryLimitsModal()" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition active:scale-95">
             <svg class="w-3.5 h-3.5 mr-1 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             Edit Limits
           </button>
@@ -394,30 +369,27 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Donut Chart & Aggregate Stats -->
+        <!-- Donut & Totals -->
         <div class="bg-slate-850 border border-slate-800 rounded-xl p-5 flex flex-col items-center justify-center">
           <div class="relative w-48 h-48">
-            <svg id="categoryDonutSvg" class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <!-- SVG Segments will be drawn dynamically -->
-            </svg>
+            <svg id="categoryDonutSvg" class="w-full h-full transform -rotate-90" viewBox="0 0 100 100"></svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-              <span class="text-[11px] text-slate-400 uppercase tracking-wider">Living Spend</span>
+              <span class="text-[11px] text-slate-400 uppercase tracking-wider">Period Spend</span>
               <span id="donutCenterAmount" class="font-mono text-lg font-bold text-white">₹0</span>
-              <span id="donutCenterSub" class="text-[10px] text-slate-400">100% of outflows</span>
+              <span id="donutCenterSub" class="text-[10px] text-slate-400">Total Outflow</span>
             </div>
           </div>
 
-          <!-- Needs vs Wants Summary Cards -->
           <div class="grid grid-cols-2 gap-3 w-full mt-5">
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center">
               <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Needs Total</span>
               <span id="sumNeedsAmt" class="font-mono text-sm font-bold text-indigo-400">₹0</span>
-              <span id="sumNeedsShare" class="text-[10px] text-slate-500 block">0% of living</span>
+              <span id="sumNeedsShare" class="text-[10px] text-slate-500 block">Cap: ₹39,000</span>
             </div>
             <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-lg text-center">
               <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Wants Total</span>
               <span id="sumWantsAmt" class="font-mono text-sm font-bold text-rose-400">₹0</span>
-              <span id="sumWantsShare" class="text-[10px] text-slate-500 block">0% of living</span>
+              <span id="sumWantsShare" class="text-[10px] text-slate-500 block">Cap: ₹15,500</span>
             </div>
           </div>
         </div>
@@ -432,21 +404,20 @@
     <!-- PANEL 4 & 5: CHANNEL ANALYTICS & 50/30/20 BURNDOWN -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
-      <!-- PANEL 4: CHANNEL ANALYTICS -->
+      <!-- PANEL 4: PAYMENT CHANNEL & APP ANALYTICS -->
       <section class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
         <div class="flex items-center space-x-2 pb-4 border-b border-slate-800">
           <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">04</span>
           <div>
             <h2 class="text-base font-bold text-white tracking-tight">Channel Analytics & Payment Rails</h2>
-            <p class="text-xs text-slate-400">Volume distribution across UPI, POS Cards, and NetBanking</p>
+            <p class="text-xs text-slate-400">Transaction volumes routed across UPI, POS Cards, and NetBanking</p>
           </div>
         </div>
 
         <div class="space-y-4 mt-5">
-          <!-- UPI RuPay / Fed UPI -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span>UPI Rails (Federal + RuPay CC)</span>
+              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span>UPI (Federal UPI + RuPay CC)</span>
               <span id="chanUpiText" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -454,10 +425,9 @@
             </div>
           </div>
 
-          <!-- POS Card Swipes -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 mr-2"></span>POS Physical Card Swipes</span>
+              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 mr-2"></span>POS Physical Card Swipes (Fuel/Dining)</span>
               <span id="chanPosText" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -465,10 +435,9 @@
             </div>
           </div>
 
-          <!-- NetBanking / NEFT -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span>NetBanking & IMPS/NEFT</span>
+              <span class="text-slate-300 flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-2"></span>NetBanking & IMPS/NEFT (Rent/PPF)</span>
               <span id="chanNetText" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -476,9 +445,9 @@
             </div>
           </div>
 
-          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
-            <span>Primary Rail: <strong id="chanPrimaryRail" class="text-emerald-400 font-mono">Federal UPI</strong></span>
-            <span>Zero Surcharge Engine Active</span>
+          <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Primary Rail: <strong class="text-emerald-400">Federal UPI + RuPay</strong></span>
+            <span>1% Fuel Surcharge Engine: Active</span>
           </div>
         </div>
       </section>
@@ -489,7 +458,7 @@
           <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">05</span>
           <div>
             <h2 class="text-base font-bold text-white tracking-tight">50/30/20 Budget Burndown & Retention</h2>
-            <p class="text-xs text-slate-400">Benchmarked against monthly net salary of ₹92,000</p>
+            <p class="text-xs text-slate-400">Living burndown against monthly salary baseline</p>
           </div>
         </div>
 
@@ -497,7 +466,7 @@
           <!-- 50% Needs -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">50% Essential Needs (Cap: <span id="bdownNeedsCap">₹46,000</span>)</span>
+              <span class="text-slate-300">50% Needs (Cap: <span id="bdownNeedsCap">₹46,000</span>)</span>
               <span id="bdownNeedsVal" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -505,14 +474,14 @@
             </div>
             <div class="flex justify-between text-[11px] text-slate-500 font-mono mt-0.5">
               <span>Housing, Groceries, Utilities, Transport, Health</span>
-              <span id="bdownNeedsRem" class="text-indigo-400">₹46,000 left</span>
+              <span id="bdownNeedsRem" class="text-indigo-400">Remaining</span>
             </div>
           </div>
 
           <!-- 30% Wants -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">30% Discretionary Wants (Cap: <span id="bdownWantsCap">₹27,600</span>)</span>
+              <span class="text-slate-300">30% Wants (Cap: <span id="bdownWantsCap">₹27,600</span>)</span>
               <span id="bdownWantsVal" class="text-white font-semibold">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
@@ -520,21 +489,21 @@
             </div>
             <div class="flex justify-between text-[11px] text-slate-500 font-mono mt-0.5">
               <span>Dining, Shopping, Tech, Entertainment, Buffer</span>
-              <span id="bdownWantsRem" class="text-rose-400">₹27,600 left</span>
+              <span id="bdownWantsRem" class="text-rose-400">Remaining</span>
             </div>
           </div>
 
-          <!-- 20% Surplus Retention -->
+          <!-- 20% Retention -->
           <div>
             <div class="flex justify-between text-xs font-mono mb-1">
-              <span class="text-slate-300">20% Minimum Surplus Target (Target: <span id="bdownSurplusCap">₹18,400</span>)</span>
+              <span class="text-slate-300">20% Surplus Target (Min: <span id="bdownSurplusCap">₹18,400</span>)</span>
               <span id="bdownSurplusVal" class="text-emerald-400 font-semibold font-mono">₹0 (0%)</span>
             </div>
             <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
               <div id="bdownSurplusBar" class="bg-emerald-500 h-2 rounded-full transition-all" style="width: 0%"></div>
             </div>
             <div class="flex justify-between text-[11px] text-slate-500 font-mono mt-0.5">
-              <span>Retained for Capital Allocation & Investments</span>
+              <span>Retained for PPF / Liquid Reserves / Investments</span>
               <span id="bdownSurplusRate" class="text-emerald-400 font-semibold">0% Saved</span>
             </div>
           </div>
@@ -542,7 +511,7 @@
       </section>
     </div>
 
-    <!-- PANEL 6: SECTION 87A TAX SENTRY -->
+    <!-- PANEL 6: SECTION 87A NEW TAX REGIME SENTRY -->
     <section class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
         <div>
@@ -550,7 +519,7 @@
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">06</span>
             <h2 class="text-base font-bold text-white tracking-tight">Section 87A Sentry (New Tax Regime 115BAC)</h2>
           </div>
-          <p class="text-xs text-slate-400 mt-0.5">Monitor the ₹12,00,000 zero-tax threshold and optimize parental arbitrage yield</p>
+          <p class="text-xs text-slate-400 mt-0.5">Tracking against the ₹12,00,000 zero-tax threshold</p>
         </div>
         <span class="text-xs font-mono px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 self-start sm:self-auto font-semibold">
           ₹12,00,000 ZERO-TAX CEILING
@@ -560,20 +529,20 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
           <span class="text-xs text-slate-400 block mb-1">Taxable Salary Base</span>
-          <div class="text-xl font-bold font-mono text-white">₹11,04,000</div>
-          <p class="text-[11px] text-slate-500 mt-1">₹11.79L CTC less ₹75k std deduction</p>
+          <div id="taxSalaryVal" class="text-xl font-bold font-mono text-white">₹11,04,000</div>
+          <p class="text-[11px] text-slate-500 mt-1">₹11.79L CTC less ₹75,000 std deduction</p>
         </div>
 
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 block mb-1">Non-Salary Interest / Yield</span>
+          <span class="text-xs text-slate-400 block mb-1">Non-Salary Interest Accrual</span>
           <div id="taxNonSalaryInterest" class="text-xl font-bold font-mono text-amber-400">₹2,100</div>
-          <p class="text-[11px] text-slate-500 mt-1">Signet FD lien interest (7.0%)</p>
+          <p class="text-[11px] text-slate-500 mt-1">Signet FD lien interest (7.0% p.a.)</p>
         </div>
 
         <div class="bg-slate-850 border border-slate-800 p-4 rounded-xl">
-          <span class="text-xs text-slate-400 block mb-1">Safety Buffer Below ₹12L</span>
+          <span class="text-xs text-slate-400 block mb-1">Headroom Below ₹12L</span>
           <div id="taxSafetyBuffer" class="text-xl font-bold font-mono text-emerald-400">₹93,900</div>
-          <p class="text-[11px] text-slate-500 mt-1">Headroom before marginal tax cliff</p>
+          <p class="text-[11px] text-slate-500 mt-1">Safe zone before marginal tax cliff</p>
         </div>
       </div>
     </section>
@@ -587,7 +556,7 @@
           <div class="flex items-center space-x-2">
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">07</span>
             <div>
-              <h2 class="text-base font-bold text-white tracking-tight">Weekly Spend Velocity & Burn-Rate Gauge</h2>
+              <h2 class="text-base font-bold text-white tracking-tight">Weekly Velocity & Burn-Rate Gauge</h2>
               <p class="text-xs text-slate-400">Pacing tracker across 4 calendar tranches</p>
             </div>
           </div>
@@ -608,7 +577,6 @@
             </div>
           </div>
 
-          <!-- Weekly Tranches -->
           <div class="space-y-2.5 font-mono text-xs">
             <div>
               <div class="flex justify-between text-slate-300 mb-0.5">
@@ -622,7 +590,7 @@
 
             <div>
               <div class="flex justify-between text-slate-300 mb-0.5">
-                <span>Week 2 (Days 8–14): Staples & Provisions</span>
+                <span>Week 2 (Days 8–14): Provisions & Staples</span>
                 <span id="vTranche2Val" class="text-white font-semibold">₹0</span>
               </div>
               <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
@@ -632,7 +600,7 @@
 
             <div>
               <div class="flex justify-between text-slate-300 mb-0.5">
-                <span>Week 3 (Days 15–21): Discretionary Velocity</span>
+                <span>Week 3 (Days 15–21): Discretionary Spend</span>
                 <span id="vTranche3Val" class="text-white font-semibold">₹0</span>
               </div>
               <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
@@ -660,7 +628,7 @@
             <span class="w-6 h-6 rounded-md bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xs font-bold font-mono">08</span>
             <div>
               <h2 class="text-base font-bold text-white tracking-tight">Cash-Drag & Emergency Runway Meter</h2>
-              <p class="text-xs text-slate-400">Liquid reserves measured against monthly burn cap</p>
+              <p class="text-xs text-slate-400">Liquid reserves measured against monthly living budget</p>
             </div>
           </div>
           <span id="runwayStatusBadge" class="text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -671,16 +639,15 @@
         <div class="mt-5 space-y-4">
           <div class="bg-slate-850 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
             <div>
-              <span class="text-[11px] text-slate-400 block">Total Spendable Liquid Cash</span>
+              <span class="text-[11px] text-slate-400 block">Total Liquid Spendable Cash</span>
               <span id="runwayLiquidCash" class="text-xl font-bold font-mono text-emerald-400">₹0</span>
             </div>
             <div class="text-right">
               <span class="text-[11px] text-slate-400 block">Emergency Longevity</span>
-              <span id="runwayMonthsNumber" class="text-xl font-bold font-mono text-white">0.0 Mos</span>
+              <span id="runwayMonthsNumber" class="text-xl font-bold font-mono text-white">0.00 Mos</span>
             </div>
           </div>
 
-          <!-- Runway Visual Meter Bar -->
           <div>
             <div class="flex justify-between text-xs font-mono text-slate-400 mb-1">
               <span>0 Mos</span>
@@ -695,7 +662,7 @@
 
           <div id="runwayDragAlert" class="p-3 rounded-lg bg-slate-850 border border-slate-800 text-xs text-slate-300 space-y-1">
             <span class="text-emerald-400 font-semibold block">✓ Liquidity Fortress Secured</span>
-            <p class="text-slate-400 text-[11px]">No cash drag detected. Your liquid cash is sized to sustain immediate operational needs without incurring excessive purchasing-power loss against inflation.</p>
+            <p class="text-slate-400 text-[11px]">Your liquid cash provides immediate operational reserves without incurring excessive cash drag against inflation.</p>
           </div>
         </div>
       </section>
@@ -706,13 +673,15 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
         <div>
           <h2 class="text-base font-bold text-white tracking-tight">Double-Entry Transaction Ledger</h2>
-          <p class="text-xs text-slate-400">Strict chronological audit trail of all inflows, outflows, transfers, and debt repayments</p>
+          <p class="text-xs text-slate-400">Audit trail with full inline edit and delete capabilities</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
+          <input type="text" id="inputLedgerSearch" placeholder="Search notes, categories..." class="bg-slate-800 border border-slate-700 text-xs text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+
           <label class="inline-flex items-center text-xs text-slate-300 cursor-pointer bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700">
             <input id="chkLockSelectedMonth" type="checkbox" checked class="rounded border-slate-600 text-indigo-600 focus:ring-0 mr-1.5">
-            Lock to Selected Month
+            Lock Month
           </label>
 
           <button type="button" id="btnExportCsv" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition active:scale-95">
@@ -726,7 +695,6 @@
         </div>
       </div>
 
-      <!-- Ledger Table -->
       <div class="mt-4 overflow-x-auto">
         <table class="w-full text-left text-xs text-slate-300">
           <thead class="bg-slate-850 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
@@ -734,10 +702,10 @@
               <th class="py-3 px-3">Date</th>
               <th class="py-3 px-3">Type</th>
               <th class="py-3 px-3">Source & Destination</th>
-              <th class="py-3 px-3">Category & Bucket</th>
+              <th class="py-3 px-3">Category</th>
               <th class="py-3 px-3">Description</th>
               <th class="py-3 px-3 text-right">Amount</th>
-              <th class="py-3 px-3 text-center">Action</th>
+              <th class="py-3 px-3 text-center">Actions</th>
             </tr>
           </thead>
           <tbody id="ledgerTableBody" class="divide-y divide-slate-800/80 font-mono">
@@ -749,12 +717,12 @@
 
   </main>
 
-  <!-- MODAL: LOG TRANSACTION -->
+  <!-- MODAL: LOG / EDIT TRANSACTION -->
   <div id="modalLogTxn" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-4 border-b border-slate-800">
         <div>
-          <h3 class="text-base font-bold text-white tracking-tight">Log Double-Entry Transaction</h3>
+          <h3 id="modalTxTitle" class="text-base font-bold text-white tracking-tight">Log Double-Entry Transaction</h3>
           <p class="text-xs text-slate-400">Records clean multi-account liquidity and expense entries</p>
         </div>
         <button type="button" onclick="closeTxModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
@@ -763,6 +731,8 @@
       </div>
 
       <form id="formLogTxn" class="mt-5 space-y-4">
+        <input type="hidden" id="txEditId" value="">
+
         <!-- Date & Type -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -776,7 +746,7 @@
               <option value="INFLOW_SALARY">Inflow: Salary Credit</option>
               <option value="INTERBANK_TRANSFER">Interbank Transfer (HDFC &rarr; Fed)</option>
               <option value="DEBT_REPAYMENT">Credit Card Bill Settlement</option>
-              <option value="ASSET_ALLOCATION">Asset Allocation (PPF/Lien)</option>
+              <option value="ASSET_ALLOCATION">Asset Allocation (PPF/FD Lien/Equity)</option>
             </select>
           </div>
         </div>
@@ -790,8 +760,8 @@
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Payment Rail / Channel</label>
             <select id="txChannel" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-              <option value="UPI">UPI (QR / VPA / Intent)</option>
-              <option value="POS_SWIPE">POS Card Swipe</option>
+              <option value="UPI">UPI (Federal UPI / RuPay QR)</option>
+              <option value="POS_SWIPE">POS Physical Card Swipe</option>
               <option value="NETBANKING">NetBanking / IMPS / NEFT</option>
             </select>
           </div>
@@ -818,6 +788,7 @@
               <option value="CC_FEDERAL_SIGNET">Federal Signet CC</option>
               <option value="CC_PAYTM_AU">Paytm AU RuPay CC</option>
               <option value="HDFC_PPF">HDFC PPF Account</option>
+              <option value="EQUITY_ASSETS">Equity / Mutual Fund Assets</option>
             </select>
           </div>
         </div>
@@ -858,7 +829,7 @@
     </div>
   </div>
 
-  <!-- MODAL: SETTLE BILL -->
+  <!-- MODAL: SETTLE CREDIT CARD BILL -->
   <div id="modalSettleBill" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
@@ -915,7 +886,6 @@
         </button>
       </div>
 
-      <!-- Live Cap Summary Bar -->
       <div class="bg-slate-850 p-3 rounded-xl border border-slate-800 my-4 grid grid-cols-3 gap-2 text-center text-xs font-mono">
         <div>
           <span class="text-slate-400 block text-[10px]">TOTAL LIVING CAP</span>
@@ -931,7 +901,6 @@
         </div>
       </div>
 
-      <!-- Category Inputs Scroll Area -->
       <form id="formCategoryLimits" class="overflow-y-auto pr-2 space-y-3 flex-1">
         <div id="categoryInputsContainer" class="space-y-3">
           <!-- Populated dynamically with all 10 category inputs -->
@@ -952,13 +921,13 @@
     </div>
   </div>
 
-  <!-- MODAL: SETTINGS & LIMITS CONFIGURATOR -->
+  <!-- MODAL: SETTINGS, OPENING BALANCES & LIMITS -->
   <div id="modalSettings" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <div>
-          <h3 class="text-base font-bold text-white tracking-tight">Engine Settings & Limits</h3>
-          <p class="text-xs text-slate-400">Configure salary baselines, safe CUR thresholds, and tax sentry parameters</p>
+          <h3 class="text-base font-bold text-white tracking-tight">Settings & Balance Editor</h3>
+          <p class="text-xs text-slate-400">Configure bank opening balances, credit card limits, and capital assets</p>
         </div>
         <button type="button" onclick="closeSettingsModal()" class="text-slate-400 hover:text-white p-1">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -966,41 +935,78 @@
       </div>
 
       <form id="formSettings" class="mt-5 space-y-4">
-        <!-- Monthly Salary -->
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Monthly Net Salary Baseline (₹)</label>
-          <input type="number" id="settingMonthlySalary" required min="10000" step="1000" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <p class="text-[11px] text-slate-500 mt-1">Drives 50/30/20 burndown benchmarks (Default: ₹92,000)</p>
-        </div>
-
-        <!-- Credit Lines -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Federal Signet Limit (₹)</label>
-            <input type="number" id="settingSignetLimit" required min="1000" step="1000" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Paytm AU Limit (₹)</label>
-            <input type="number" id="settingAuLimit" required min="1000" step="1000" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <!-- Liquid Opening Balances -->
+        <div class="bg-slate-850 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">1. Liquid Bank Balances (Baseline)</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">HDFC Salary Opening (₹)</label>
+              <input type="number" id="settingHdfcOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Federal Savings Opening (₹)</label>
+              <input type="number" id="settingFederalOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
           </div>
         </div>
 
-        <!-- Safe CUR Threshold -->
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Safe Utilization Threshold (%)</label>
-          <input type="number" id="settingSafeCur" required min="10" max="90" step="1" class="w-full bg-slate-850 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          <p class="text-[11px] text-slate-500 mt-1">CIBIL safe ceiling triggers warning banners above this percentage (Default: 30%)</p>
+        <!-- Locked Assets & Sovereign Reserves -->
+        <div class="bg-slate-850 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-amber-400 uppercase tracking-wider block">2. Locked Assets & Sovereign Wealth</span>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">FD Signet Lien (₹)</label>
+              <input type="number" id="settingFdOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">HDFC PPF Corpus (₹)</label>
+              <input type="number" id="settingPpfOpening" required min="0" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">EPF Corpus (₹)</label>
+              <input type="number" id="settingEpfOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Equity / MF Basis (₹)</label>
+              <input type="number" id="settingEquityOpening" required min="0" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
         </div>
 
-        <!-- Clear State Option -->
+        <!-- Credit Lines & Thresholds -->
+        <div class="bg-slate-850 p-3.5 rounded-xl border border-slate-800 space-y-3">
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider block">3. Card Limits & CUR Sentry</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Federal Signet Limit (₹)</label>
+              <input type="number" id="settingSignetLimit" required min="1000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Paytm AU RuPay Limit (₹)</label>
+              <input type="number" id="settingAuLimit" required min="1000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Monthly Salary Baseline (₹)</label>
+              <input type="number" id="settingMonthlySalary" required min="10000" step="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Safe Utilization Limit (%)</label>
+              <input type="number" id="settingSafeCur" required min="10" max="90" step="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
         <div class="pt-4 border-t border-slate-800 flex items-center justify-between">
           <button type="button" onclick="hardResetEngine()" class="text-xs text-rose-400 hover:text-rose-300 underline font-mono">
-            ⚠️ Hard Reset All Data
+            ⚠️ Purge All Data & Start Fresh
           </button>
           <div class="flex items-center space-x-3">
             <button type="button" onclick="closeSettingsModal()" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">Cancel</button>
             <button type="submit" id="btnSaveSettings" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition active:scale-95 shadow-md shadow-indigo-600/30">
-              Save & Apply Settings
+              Save Settings
             </button>
           </div>
         </div>
@@ -1018,10 +1024,10 @@
   <script>
     /**
      * WEALTH TELEMETRY & LIQUIDITY ENGINE
-     * Zero-leakage personal finance tracker for Indian banking architecture.
+     * Clean slate initialization (zero preset transactions).
      */
 
-    const STORAGE_KEY = 'wealth_engine_state_v2';
+    const STORAGE_KEY = 'wealth_engine_state_clean_v1';
 
     // 10 Master Categories Taxonomy
     const MASTER_CATEGORIES = [
@@ -1037,40 +1043,6 @@
       { id: 'MISC_BUFFER', name: 'Miscellaneous & Buffer', icon: '📦', bucket: 'WANT', defaultCap: 2500, color: '#64748b', examples: 'Unplanned expenses, gifts, domestic petty' }
     ];
 
-    // Initial Baseline Transactions (August, September, October 2026)
-    const DEFAULT_TRANSACTIONS = [
-      // OCTOBER 2026
-      { id: 'tx-202610-01', date: '2026-10-01', type: 'INFLOW_SALARY', source: 'EXTERNAL_INFLOW', destination: 'HDFC_SALARY', channel: 'NETBANKING', category: 'Salary Inflow', budgetBucket: 'NOT_APPLICABLE', amount: 92000, desc: 'October Net Salary Credit' },
-      { id: 'tx-202610-02', date: '2026-10-01', type: 'INTERBANK_TRANSFER', source: 'HDFC_SALARY', destination: 'FEDERAL_SAVINGS', channel: 'NETBANKING', category: 'Operating Sweep', budgetBucket: 'NOT_APPLICABLE', amount: 35000, desc: 'Sweep to Federal Savings for Daily Living' },
-      { id: 'tx-202610-03', date: '2026-10-02', type: 'DIRECT_EXPENSE', source: 'HDFC_SALARY', destination: 'MERCHANT_EXPENSE', channel: 'NETBANKING', category: 'Housing & Rent', budgetBucket: 'NEED', amount: 22000, desc: 'Apartment Rent via NetBanking' },
-      { id: 'tx-202610-04', date: '2026-10-04', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Groceries & Supermarket', budgetBucket: 'NEED', amount: 3840, desc: 'Blinkit monthly grocery essentials' },
-      { id: 'tx-202610-05', date: '2026-10-06', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Utilities & Bills', budgetBucket: 'NEED', amount: 2450, desc: 'KSEB Electricity & Fiber Broadband' },
-      { id: 'tx-202610-06', date: '2026-10-09', type: 'DIRECT_EXPENSE', source: 'CC_FEDERAL_SIGNET', destination: 'MERCHANT_EXPENSE', channel: 'POS_SWIPE', category: 'Transportation & Fuel', budgetBucket: 'NEED', amount: 2800, desc: 'HPCL Fuel swipe (1% surcharge waiver)' },
-      { id: 'tx-202610-07', date: '2026-10-12', type: 'DIRECT_EXPENSE', source: 'CC_PAYTM_AU', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Dining & Food Delivery', budgetBucket: 'WANT', amount: 1650, desc: 'Swiggy Weekend Gourmet dining' },
-      { id: 'tx-202610-08', date: '2026-10-15', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Health & Fitness', budgetBucket: 'NEED', amount: 1400, desc: 'Pharmacy & multivitamins' },
-      { id: 'tx-202610-09', date: '2026-10-18', type: 'DIRECT_EXPENSE', source: 'CC_PAYTM_AU', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Subscriptions & Tech', budgetBucket: 'WANT', amount: 1199, desc: 'Annual streaming & cloud renewal' },
-      { id: 'tx-202610-10', date: '2026-10-22', type: 'DIRECT_EXPENSE', source: 'CC_FEDERAL_SIGNET', destination: 'MERCHANT_EXPENSE', channel: 'POS_SWIPE', category: 'Shopping & Apparel', budgetBucket: 'WANT', amount: 2400, desc: 'Workwear shirt & footwear' },
-      { id: 'tx-202610-11', date: '2026-10-25', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Entertainment & Social', budgetBucket: 'WANT', amount: 1200, desc: 'Movie night tickets & concessions' },
-
-      // SEPTEMBER 2026
-      { id: 'tx-202609-01', date: '2026-09-01', type: 'INFLOW_SALARY', source: 'EXTERNAL_INFLOW', destination: 'HDFC_SALARY', channel: 'NETBANKING', category: 'Salary Inflow', budgetBucket: 'NOT_APPLICABLE', amount: 92000, desc: 'September Net Salary Credit' },
-      { id: 'tx-202609-02', date: '2026-09-01', type: 'INTERBANK_TRANSFER', source: 'HDFC_SALARY', destination: 'FEDERAL_SAVINGS', channel: 'NETBANKING', category: 'Operating Sweep', budgetBucket: 'NOT_APPLICABLE', amount: 35000, desc: 'Sweep to Federal Savings' },
-      { id: 'tx-202609-03', date: '2026-09-02', type: 'DIRECT_EXPENSE', source: 'HDFC_SALARY', destination: 'MERCHANT_EXPENSE', channel: 'NETBANKING', category: 'Housing & Rent', budgetBucket: 'NEED', amount: 22000, desc: 'Apartment Rent' },
-      { id: 'tx-202609-04', date: '2026-09-05', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Groceries & Supermarket', budgetBucket: 'NEED', amount: 5400, desc: 'Monthly Supermarket provisions' },
-      { id: 'tx-202609-05', date: '2026-09-08', type: 'DIRECT_EXPENSE', source: 'CC_FEDERAL_SIGNET', destination: 'MERCHANT_EXPENSE', channel: 'POS_SWIPE', category: 'Transportation & Fuel', budgetBucket: 'NEED', amount: 4100, desc: 'BPCL Fuel swipes' },
-      { id: 'tx-202609-06', date: '2026-09-12', type: 'DIRECT_EXPENSE', source: 'CC_PAYTM_AU', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Dining & Food Delivery', budgetBucket: 'WANT', amount: 3200, desc: 'Weekend Restaurant Outings' },
-      { id: 'tx-202609-07', date: '2026-09-20', type: 'DEBT_REPAYMENT', source: 'FEDERAL_SAVINGS', destination: 'CC_FEDERAL_SIGNET', channel: 'UPI', category: 'Card Bill Payment', budgetBucket: 'NOT_APPLICABLE', amount: 4100, desc: 'Signet Bill Settlement from Federal Bank' },
-      { id: 'tx-202609-08', date: '2026-09-24', type: 'DEBT_REPAYMENT', source: 'FEDERAL_SAVINGS', destination: 'CC_PAYTM_AU', channel: 'UPI', category: 'Card Bill Payment', budgetBucket: 'NOT_APPLICABLE', amount: 3200, desc: 'Paytm AU RuPay Settlement from Federal Bank' },
-
-      // AUGUST 2026
-      { id: 'tx-202608-01', date: '2026-08-01', type: 'INFLOW_SALARY', source: 'EXTERNAL_INFLOW', destination: 'HDFC_SALARY', channel: 'NETBANKING', category: 'Salary Inflow', budgetBucket: 'NOT_APPLICABLE', amount: 92000, desc: 'August Net Salary Credit' },
-      { id: 'tx-202608-02', date: '2026-08-01', type: 'INTERBANK_TRANSFER', source: 'HDFC_SALARY', destination: 'FEDERAL_SAVINGS', channel: 'NETBANKING', category: 'Operating Sweep', budgetBucket: 'NOT_APPLICABLE', amount: 35000, desc: 'Operating sweep' },
-      { id: 'tx-202608-03', date: '2026-08-02', type: 'DIRECT_EXPENSE', source: 'HDFC_SALARY', destination: 'MERCHANT_EXPENSE', channel: 'NETBANKING', category: 'Housing & Rent', budgetBucket: 'NEED', amount: 22000, desc: 'Apartment Rent' },
-      { id: 'tx-202608-04', date: '2026-08-06', type: 'DIRECT_EXPENSE', source: 'FEDERAL_SAVINGS', destination: 'MERCHANT_EXPENSE', channel: 'UPI', category: 'Groceries & Supermarket', budgetBucket: 'NEED', amount: 4900, desc: 'Groceries' },
-      { id: 'tx-202608-05', date: '2026-08-15', type: 'ASSET_ALLOCATION', source: 'HDFC_SALARY', destination: 'HDFC_PPF', channel: 'NETBANKING', category: 'Sovereign Investment', budgetBucket: 'NOT_APPLICABLE', amount: 12500, desc: 'HDFC PPF Sovereign Tax-Free Contribution' }
-    ];
-
-    // Helper: Returns current calendar YYYY-MM
     function getCurrentCalendarYM() {
       const d = new Date();
       const y = d.getFullYear();
@@ -1078,7 +1050,6 @@
       return `${y}-${m}`;
     }
 
-    // Helper: Formats YYYY-MM into friendly string (e.g. "November 2026")
     function formatYMToLabel(ym) {
       if (ym === 'ALL') return 'All Time / Cumulative View';
       const parts = ym.split('-');
@@ -1088,10 +1059,9 @@
       return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
     }
 
-    // Helper: Generates list of dynamic periods forward and backward
     function getDynamicPeriods(transactions, activePeriod) {
       const currentYM = getCurrentCalendarYM();
-      const months = new Set([currentYM, '2026-10', '2026-09', '2026-08']);
+      const months = new Set([currentYM]);
 
       if (activePeriod && activePeriod !== 'ALL') {
         months.add(activePeriod);
@@ -1103,21 +1073,26 @@
         }
       });
 
-      // Sort chronological ascending
       const sortedAsc = Array.from(months).sort();
-
-      // Return both ascending array and dropdown options (descending order)
       return {
         chronological: sortedAsc,
         dropdownList: ['ALL', ...sortedAsc.slice().reverse()]
       };
     }
 
-    // Central Application State
-    let appState = {
-      version: 2,
-      selectedPeriod: getCurrentCalendarYM(), // Defaults dynamically to current calendar month (e.g. 2026-11)
+    // Default Configuration with Zero Transactions
+    const DEFAULT_STATE = {
+      version: 3,
+      selectedPeriod: getCurrentCalendarYM(),
       activeCategoryFilter: 'ALL',
+      accounts: {
+        hdfcOpening: 45000,
+        federalOpening: 17500,
+        fdOpening: 30000,
+        ppfOpening: 15000,
+        epfOpening: 40000,
+        equityOpening: 25000
+      },
       settings: {
         monthlySalary: 92000,
         signetLimit: 24000,
@@ -1127,59 +1102,54 @@
         wantsRatio: 30,
         surplusRatio: 20
       },
-      categoryLimits: {},
-      transactions: []
+      categoryLimits: {
+        'HOUSING_RENT': 22000,
+        'GROCERIES': 6000,
+        'UTILITIES_BILLS': 3500,
+        'TRANSPORT_FUEL': 4500,
+        'HEALTH_FITNESS': 3000,
+        'DINING_OUT': 4000,
+        'SHOPPING_APPAREL': 4500,
+        'SUBSCRIPTIONS_TECH': 1500,
+        'ENTERTAINMENT_SOCIAL': 3000,
+        'MISC_BUFFER': 2500
+      },
+      transactions: [] // Zero dummy transactions
     };
 
-    // State Auto-Healing and Loader
+    let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed === 'object') {
-            appState.settings = Object.assign({}, appState.settings, parsed.settings || {});
-            appState.categoryLimits = Object.assign({}, parsed.categoryLimits || {});
-            appState.transactions = Array.isArray(parsed.transactions) ? parsed.transactions : DEFAULT_TRANSACTIONS;
-            // Retain saved period if explicitly stored, or default to current calendar month
+            appState.accounts = Object.assign({}, DEFAULT_STATE.accounts, parsed.accounts || {});
+            appState.settings = Object.assign({}, DEFAULT_STATE.settings, parsed.settings || {});
+            appState.categoryLimits = Object.assign({}, DEFAULT_STATE.categoryLimits, parsed.categoryLimits || {});
+            appState.transactions = Array.isArray(parsed.transactions) ? parsed.transactions : [];
             appState.selectedPeriod = parsed.selectedPeriod || getCurrentCalendarYM();
           }
         } else {
-          // Initialize default limits
-          MASTER_CATEGORIES.forEach(c => {
-            appState.categoryLimits[c.id] = c.defaultCap;
-          });
-          appState.transactions = [...DEFAULT_TRANSACTIONS];
-          appState.selectedPeriod = getCurrentCalendarYM();
+          appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
           saveState();
         }
-      } catch (err) {
-        console.warn('State parse error, healing to defaults:', err);
-        MASTER_CATEGORIES.forEach(c => {
-          appState.categoryLimits[c.id] = c.defaultCap;
-        });
-        appState.transactions = [...DEFAULT_TRANSACTIONS];
-        appState.selectedPeriod = getCurrentCalendarYM();
+      } catch (e) {
+        console.warn('Recovered state to clean defaults:', e);
+        appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
         saveState();
       }
-
-      // Ensure every master category has a limit assigned
-      MASTER_CATEGORIES.forEach(c => {
-        if (!appState.categoryLimits[c.id] || isNaN(appState.categoryLimits[c.id])) {
-          appState.categoryLimits[c.id] = c.defaultCap;
-        }
-      });
     }
 
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
       } catch (e) {
-        console.error('Failed to write to localStorage:', e);
+        console.error('Failed to save to localStorage:', e);
       }
     }
 
-    // Toast Notification System
     let toastTimeout = null;
     function showToast(msg, icon = '✅') {
       const el = document.getElementById('toastNotification');
@@ -1199,31 +1169,28 @@
       }, 3500);
     }
 
-    // TELEMETRY CALCULATION ENGINE
+    // TELEMETRY ENGINE COMPUTATIONS
     function computeEngine() {
       const selPeriod = appState.selectedPeriod;
       const cfg = appState.settings;
+      const acc = appState.accounts;
 
-      // Filter transactions according to selected period
       const allTxs = [...appState.transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
       const periodTxs = allTxs.filter(tx => {
         if (selPeriod === 'ALL') return true;
         return tx.date.startsWith(selPeriod);
       });
 
-      // Account Ledgers (Cumulative up to current point)
-      let balHdfc = 0;
-      let balFederal = 0;
-      let balFdSignet = 30000; // Locked lien capital
-      let balPpf = 85000;      // Sovereign corpus baseline
-      let balEpf = 142000;     // Statutory EPF corpus
-      let balMarket = 65000;   // Mutual fund cost basis
+      let balHdfc = Number(acc.hdfcOpening) || 0;
+      let balFederal = Number(acc.federalOpening) || 0;
+      let balFdSignet = Number(acc.fdOpening) || 30000;
+      let balPpf = Number(acc.ppfOpening) || 0;
+      let balEpf = Number(acc.epfOpening) || 0;
+      let balEquity = Number(acc.equityOpening) || 0;
 
-      // Credit Card Liabilities
       let dueSignet = 0;
       let dueAu = 0;
 
-      // Waterfall Period Metrics
       let periodInflow = 0;
       let periodOutflow = 0;
       let hdfcPeriodIn = 0;
@@ -1231,21 +1198,17 @@
       let fedPeriodIn = 0;
       let fedPeriodOut = 0;
 
-      // Channel Tracking
       let chanUpi = 0;
       let chanPos = 0;
       let chanNet = 0;
 
-      // Category Spends
       const catSpendMap = {};
       MASTER_CATEGORIES.forEach(c => { catSpendMap[c.id] = 0; });
 
-      // Process All Transactions for Balances
       allTxs.forEach(tx => {
         const amt = parseFloat(tx.amount) || 0;
         const isCurrentPeriod = (selPeriod === 'ALL') || tx.date.startsWith(selPeriod);
 
-        // Track Inflows/Outflows for current period
         if (isCurrentPeriod) {
           if (tx.type === 'INFLOW_SALARY') {
             periodInflow += amt;
@@ -1254,12 +1217,14 @@
           }
         }
 
-        // Double Entry Routing
         switch (tx.type) {
           case 'INFLOW_SALARY':
             if (tx.destination === 'HDFC_SALARY') {
               balHdfc += amt;
               if (isCurrentPeriod) hdfcPeriodIn += amt;
+            } else if (tx.destination === 'FEDERAL_SAVINGS') {
+              balFederal += amt;
+              if (isCurrentPeriod) fedPeriodIn += amt;
             }
             break;
 
@@ -1267,10 +1232,17 @@
             if (tx.source === 'HDFC_SALARY') {
               balHdfc -= amt;
               if (isCurrentPeriod) hdfcPeriodOut += amt;
+            } else if (tx.source === 'FEDERAL_SAVINGS') {
+              balFederal -= amt;
+              if (isCurrentPeriod) fedPeriodOut += amt;
             }
+
             if (tx.destination === 'FEDERAL_SAVINGS') {
               balFederal += amt;
               if (isCurrentPeriod) fedPeriodIn += amt;
+            } else if (tx.destination === 'HDFC_SALARY') {
+              balHdfc += amt;
+              if (isCurrentPeriod) hdfcPeriodIn += amt;
             }
             break;
 
@@ -1287,7 +1259,6 @@
               dueAu += amt;
             }
 
-            // Category breakdown for selected period
             if (isCurrentPeriod) {
               const matchedCat = MASTER_CATEGORIES.find(c => c.name === tx.category || c.id === tx.category);
               if (matchedCat) {
@@ -1296,7 +1267,6 @@
                 catSpendMap['MISC_BUFFER'] += amt;
               }
 
-              // Channel distribution
               if (tx.channel === 'UPI') chanUpi += amt;
               else if (tx.channel === 'POS_SWIPE') chanPos += amt;
               else chanNet += amt;
@@ -1320,28 +1290,31 @@
             break;
 
           case 'ASSET_ALLOCATION':
-            if (tx.source === 'HDFC_SALARY') balHdfc -= amt;
-            else if (tx.source === 'FEDERAL_SAVINGS') balFederal -= amt;
+            if (tx.source === 'HDFC_SALARY') {
+              balHdfc -= amt;
+              if (isCurrentPeriod) hdfcPeriodOut += amt;
+            } else if (tx.source === 'FEDERAL_SAVINGS') {
+              balFederal -= amt;
+              if (isCurrentPeriod) fedPeriodOut += amt;
+            }
 
             if (tx.destination === 'HDFC_PPF') balPpf += amt;
+            else if (tx.destination === 'EQUITY_ASSETS') balEquity += amt;
             break;
         }
       });
 
-      // Total Spendable & Net Worth
       const spendableCash = balHdfc + balFederal;
       const totalCCDue = dueSignet + dueAu;
-      const totalNetWorth = spendableCash + balFdSignet + balPpf + balEpf + balMarket - totalCCDue;
+      const totalNetWorth = spendableCash + balFdSignet + balPpf + balEpf + balEquity - totalCCDue;
 
-      // Credit Card Safe Utilization Computations
-      const limitSignet = cfg.signetLimit || 24000;
-      const limitAu = cfg.auLimit || 90000;
+      const limitSignet = Number(cfg.signetLimit) || 24000;
+      const limitAu = Number(cfg.auLimit) || 90000;
       const curSignet = limitSignet > 0 ? (dueSignet / limitSignet) * 100 : 0;
       const curAu = limitAu > 0 ? (dueAu / limitAu) * 100 : 0;
       const totalLimit = limitSignet + limitAu;
       const combinedCur = totalLimit > 0 ? (totalCCDue / totalLimit) * 100 : 0;
 
-      // 50/30/20 Computations
       let needsSpend = 0;
       let wantsSpend = 0;
       MASTER_CATEGORIES.forEach(c => {
@@ -1350,25 +1323,18 @@
       });
 
       const totalLivingSpend = needsSpend + wantsSpend;
-      const monthlySalary = cfg.monthlySalary || 92000;
+      const monthlySalary = Number(cfg.monthlySalary) || 92000;
       const capNeeds = (monthlySalary * (cfg.needsRatio || 50)) / 100;
       const capWants = (monthlySalary * (cfg.wantsRatio || 30)) / 100;
       const targetSurplus = (monthlySalary * (cfg.surplusRatio || 20)) / 100;
       const retainedSurplus = Math.max(0, monthlySalary - totalLivingSpend);
       const savingsRate = monthlySalary > 0 ? (retainedSurplus / monthlySalary) * 100 : 0;
 
-      // Total Planned Living Cap from custom category limits
       let plannedLivingCap = 0;
-      let plannedNeedsCap = 0;
-      let plannedWantsCap = 0;
       MASTER_CATEGORIES.forEach(c => {
-        const lim = appState.categoryLimits[c.id] || c.defaultCap;
-        plannedLivingCap += lim;
-        if (c.bucket === 'NEED') plannedNeedsCap += lim;
-        else plannedWantsCap += lim;
+        plannedLivingCap += (Number(appState.categoryLimits[c.id]) || c.defaultCap);
       });
 
-      // Weekly Burn Velocity Tranches
       const weeklyTranches = [0, 0, 0, 0];
       periodTxs.forEach(tx => {
         if (tx.type === 'DIRECT_EXPENSE') {
@@ -1381,11 +1347,9 @@
         }
       });
 
-      // Daily burn rate calculation based on days elapsed in selected month
       const today = new Date();
       const currentCalYM = getCurrentCalendarYM();
       let currentDay = 30;
-
       if (selPeriod === currentCalYM) {
         currentDay = Math.max(1, today.getDate());
       } else if (selPeriod !== 'ALL') {
@@ -1396,14 +1360,12 @@
       const dailyBurn = currentDay > 0 ? (totalLivingSpend / currentDay) : 0;
       const projectedMonthTotal = dailyBurn * 30;
 
-      // Cash-Drag & Runway Longevity
       const runwayMonths = plannedLivingCap > 0 ? (spendableCash / plannedLivingCap) : 0;
 
-      // Section 87A Tax Sentry
-      const grossSalaryAnnual = 1179000;
+      const grossSalaryAnnual = monthlySalary * 12;
       const stdDeduction = 75000;
-      const netTaxableSalary = grossSalaryAnnual - stdDeduction; // 11,04,000
-      const fdInterestYearly = (balFdSignet * 0.07); // ~2,100
+      const netTaxableSalary = Math.max(0, grossSalaryAnnual - stdDeduction);
+      const fdInterestYearly = (balFdSignet * 0.07);
       const totalTaxable = netTaxableSalary + fdInterestYearly;
       const taxSafetyBuffer = Math.max(0, 1200000 - totalTaxable);
 
@@ -1417,6 +1379,7 @@
         balFdSignet,
         balPpf,
         balEpf,
+        balEquity,
         totalNetWorth,
         totalCCDue,
         dueSignet,
@@ -1446,8 +1409,6 @@
         targetSurplus,
         savingsRate,
         plannedLivingCap,
-        plannedNeedsCap,
-        plannedWantsCap,
         weeklyTranches,
         dailyBurn,
         projectedMonthTotal,
@@ -1464,13 +1425,12 @@
       const data = computeEngine();
       const currentCalYM = getCurrentCalendarYM();
 
-      // 0. Update Dynamic Period Navigator Dropdown
-      const { chronological, dropdownList } = getDynamicPeriods(appState.transactions, appState.selectedPeriod);
+      // Period Dropdown
+      const { dropdownList } = getDynamicPeriods(appState.transactions, appState.selectedPeriod);
       const selPeriodEl = document.getElementById('selPeriodNavigator');
-      
       selPeriodEl.innerHTML = dropdownList.map(ym => {
         const isCurrent = (ym === currentCalYM);
-        const label = formatYMToLabel(ym) + (isCurrent ? ' (Active Period)' : '');
+        const label = formatYMToLabel(ym) + (isCurrent ? ' (Active)' : '');
         return `<option value="${ym}" ${ym === appState.selectedPeriod ? 'selected' : ''}>${label}</option>`;
       }).join('');
 
@@ -1478,37 +1438,38 @@
       document.getElementById('navPeriodOutflow').textContent = formatInr(data.periodOutflow);
       document.getElementById('navPeriodSurplus').textContent = formatInr(Math.max(0, data.periodInflow - data.periodOutflow));
 
-      // Top KPI Strip
+      // KPI Strip
       document.getElementById('kpiSpendableCash').textContent = formatInr(data.spendableCash);
       document.getElementById('kpiTotalCCDue').textContent = formatInr(data.totalCCDue);
       document.getElementById('kpiMonthSpend').textContent = formatInr(data.totalLivingSpend);
       document.getElementById('kpiNetWorth').textContent = formatInr(data.totalNetWorth);
       document.getElementById('kpiBudgetCap').textContent = formatInr(data.plannedLivingCap);
-      
+
       const kpiCurPill = document.getElementById('kpiCurPill');
       kpiCurPill.textContent = `CUR: ${data.combinedCur.toFixed(1)}%`;
-      if (data.combinedCur > data.cfg.safeCurPercent) {
-        kpiCurPill.className = 'text-rose-400 font-mono text-[10px] font-bold';
-      } else {
-        kpiCurPill.className = 'text-emerald-400 font-mono text-[10px]';
-      }
+      kpiCurPill.className = data.combinedCur > data.cfg.safeCurPercent ? 'text-rose-400 font-mono text-[10px] font-bold' : 'text-emerald-400 font-mono text-[10px]';
 
-      // Panel 1: Bank Reconciliation Waterfall
+      // Panel 1: Bank Waterfall
       document.getElementById('waterfallHdfcBalance').textContent = formatInr(data.balHdfc);
       document.getElementById('waterfallFederalBalance').textContent = formatInr(data.balFederal);
       document.getElementById('waterfallFdBalance').textContent = formatInr(data.balFdSignet);
-      document.getElementById('waterfallSovereignTotal').textContent = formatInr(data.balPpf + data.balEpf);
+      document.getElementById('waterfallSignetLine').textContent = formatInr(data.limitSignet);
+      document.getElementById('waterfallSovereignTotal').textContent = formatInr(data.balPpf + data.balEpf + data.balEquity);
       document.getElementById('waterfallHdfcIn').textContent = `+${formatInr(data.hdfcPeriodIn)}`;
       document.getElementById('waterfallHdfcOut').textContent = `-${formatInr(data.hdfcPeriodOut)}`;
       document.getElementById('waterfallFedIn').textContent = `+${formatInr(data.fedPeriodIn)}`;
       document.getElementById('waterfallFedOut').textContent = `-${formatInr(data.fedPeriodOut)}`;
       document.getElementById('waterfallPpfVal').textContent = formatInr(data.balPpf);
-      document.getElementById('waterfallEpfVal').textContent = formatInr(data.balEpf);
+      document.getElementById('waterfallEpfVal').textContent = formatInr(data.balEpf + data.balEquity);
 
-      // Panel 2: Credit Card Telemetry & CUR
+      // Panel 2: Credit Cards
       document.getElementById('panel2CombinedCur').textContent = `${data.combinedCur.toFixed(1)}%`;
       document.getElementById('dueSignet').textContent = formatInr(data.dueSignet);
       document.getElementById('dueAu').textContent = formatInr(data.dueAu);
+      document.getElementById('labelSignetLimit').textContent = `Limit: ${formatInr(data.limitSignet)}`;
+      document.getElementById('labelAuLimit').textContent = `Limit: ${formatInr(data.limitAu)}`;
+      document.getElementById('labelSignetSafe').textContent = `Safe Cap (30%): ${formatInr(data.limitSignet * 0.3)}`;
+      document.getElementById('labelAuSafe').textContent = `Safe Cap (30%): ${formatInr(data.limitAu * 0.3)}`;
       document.getElementById('availSignet').textContent = `Available: ${formatInr(Math.max(0, data.limitSignet - data.dueSignet))}`;
       document.getElementById('availAu').textContent = `Available: ${formatInr(Math.max(0, data.limitAu - data.dueAu))}`;
 
@@ -1519,32 +1480,16 @@
 
       const curBadgeSignet = document.getElementById('curBadgeSignet');
       curBadgeSignet.textContent = `${data.curSignet.toFixed(1)}% CUR`;
-      if (data.curSignet > data.cfg.safeCurPercent) {
-        curBadgeSignet.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20';
-        barSignet.className = 'bg-rose-500 h-2.5 rounded-full transition-all duration-300';
-        document.getElementById('alertSignet').innerHTML = `<span class="text-rose-400">⚠️ Breach: Pre-pay ${formatInr(data.dueSignet - (data.limitSignet * 0.3))} before 18th</span>`;
-      } else {
-        curBadgeSignet.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-        barSignet.className = 'bg-indigo-500 h-2.5 rounded-full transition-all duration-300';
-        document.getElementById('alertSignet').textContent = '✓ Safe utilization maintained';
-      }
+      curBadgeSignet.className = data.curSignet > data.cfg.safeCurPercent ? 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
 
       const curBadgeAu = document.getElementById('curBadgeAu');
       curBadgeAu.textContent = `${data.curAu.toFixed(1)}% CUR`;
-      if (data.curAu > data.cfg.safeCurPercent) {
-        curBadgeAu.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20';
-        barAu.className = 'bg-rose-500 h-2.5 rounded-full transition-all duration-300';
-        document.getElementById('alertAu').innerHTML = `<span class="text-rose-400">⚠️ Breach: Pre-pay ${formatInr(data.dueAu - (data.limitAu * 0.3))} before 22nd</span>`;
-      } else {
-        curBadgeAu.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-        barAu.className = 'bg-indigo-500 h-2.5 rounded-full transition-all duration-300';
-        document.getElementById('alertAu').textContent = '✓ Safe utilization maintained';
-      }
+      curBadgeAu.className = data.curAu > data.cfg.safeCurPercent ? 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
 
-      // Panel 3: Category Donut & Variance Cards
+      // Panel 3: Categories & Donut
       renderCategorySection(data);
 
-      // Panel 4: Channel Analytics
+      // Panel 4: Channels
       const totalChan = (data.chanUpi + data.chanPos + data.chanNet) || 1;
       const upiPct = ((data.chanUpi / totalChan) * 100).toFixed(1);
       const posPct = ((data.chanPos / totalChan) * 100).toFixed(1);
@@ -1576,18 +1521,17 @@
       document.getElementById('bdownNeedsRem').textContent = data.needsSpend > data.capNeeds 
         ? `Over by ${formatInr(data.needsSpend - data.capNeeds)}` 
         : `${formatInr(data.capNeeds - data.needsSpend)} left`;
-      
       document.getElementById('bdownWantsRem').textContent = data.wantsSpend > data.capWants 
         ? `Over by ${formatInr(data.wantsSpend - data.capWants)}` 
         : `${formatInr(data.capWants - data.wantsSpend)} left`;
+      document.getElementById('bdownSurplusRate').textContent = `${data.savingsRate.toFixed(1)}% Saved`;
 
-      document.getElementById('bdownSurplusRate').textContent = `${data.savingsRate.toFixed(1)}% Retention`;
-
-      // Panel 6: Section 87A Sentry
+      // Panel 6: Tax Sentry
+      document.getElementById('taxSalaryVal').textContent = formatInr(data.netTaxableSalary);
       document.getElementById('taxNonSalaryInterest').textContent = formatInr(data.fdInterestYearly);
       document.getElementById('taxSafetyBuffer').textContent = formatInr(data.taxSafetyBuffer);
 
-      // Panel 7: Weekly Velocity & Burn Rate
+      // Panel 7: Velocity & Burn Rate
       document.getElementById('velocityDailyBurn').textContent = `${formatInr(data.dailyBurn)} / day`;
       document.getElementById('velocityProjectedTotal').textContent = formatInr(data.projectedMonthTotal);
 
@@ -1600,15 +1544,15 @@
         pacingBadge.textContent = 'ON TRACK';
       }
 
-      const trancheCap = data.plannedLivingCap / 4;
+      const trancheCap = (data.plannedLivingCap / 4) || 1;
       for (let i = 0; i < 4; i++) {
         const val = data.weeklyTranches[i];
-        const pct = trancheCap > 0 ? (val / trancheCap) * 100 : 0;
+        const pct = (val / trancheCap) * 100;
         document.getElementById(`vTranche${i+1}Val`).textContent = formatInr(val);
         document.getElementById(`vTranche${i+1}Bar`).style.width = `${Math.min(100, pct)}%`;
       }
 
-      // Panel 8: Runway Meter & Cash Drag
+      // Panel 8: Runway Meter
       document.getElementById('runwayLiquidCash').textContent = formatInr(data.spendableCash);
       document.getElementById('runwayMonthsNumber').textContent = `${data.runwayMonths.toFixed(2)} Mos`;
       
@@ -1621,66 +1565,54 @@
 
       if (data.runwayMonths < 1.0) {
         runwayStatusBadge.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20';
-        runwayStatusBadge.textContent = 'CRITICAL LIQUIDITY';
+        runwayStatusBadge.textContent = 'CRITICAL (<1 Mo)';
         dragAlert.innerHTML = `
-          <span class="text-rose-400 font-semibold block">⚠️ Sub-1 Month Buffer</span>
-          <p class="text-slate-400 text-[11px]">Current liquid cash is below your monthly living burn rate. Sweep emergency cash from secondary reserves.</p>
+          <span class="text-rose-400 font-semibold block">⚠️ Sub-1 Month Emergency Runway</span>
+          <p class="text-slate-400 text-[11px]">Liquid cash is below one month of living expenses. Prioritize retaining surplus in Federal/HDFC.</p>
         `;
       } else if (data.runwayMonths > 3.0) {
         const excess = data.spendableCash - (data.plannedLivingCap * 3);
-        const dragCost = (excess * 0.04); // 4% spread between savings & arbitrage fund
+        const dragCost = (excess * 0.04);
         runwayStatusBadge.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20';
-        runwayStatusBadge.textContent = 'CASH DRAG DETECTED';
+        runwayStatusBadge.textContent = 'CASH DRAG (>3 Mos)';
         dragAlert.innerHTML = `
           <span class="text-amber-400 font-semibold block">⚠️ Cash Drag: ${formatInr(excess)} Idle Surplus</span>
-          <p class="text-slate-400 text-[11px]">Holding excessive liquid cash incurs ~${formatInr(dragCost)}/yr opportunity cost vs 7.2% Arbitrage funds. Consider sweeping surplus.</p>
+          <p class="text-slate-400 text-[11px]">Holding excessive liquid cash incurs ~${formatInr(dragCost)}/yr opportunity loss vs Arbitrage funds.</p>
         `;
       } else {
         runwayStatusBadge.className = 'text-xs font-mono px-2 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-        runwayStatusBadge.textContent = 'OPTIMAL';
+        runwayStatusBadge.textContent = 'OPTIMAL (1–3 Mos)';
         dragAlert.innerHTML = `
           <span class="text-emerald-400 font-semibold block">✓ Liquidity Fortress Secured</span>
-          <p class="text-slate-400 text-[11px]">No cash drag detected. Your liquid cash is sized to sustain immediate operational needs without incurring excessive purchasing-power loss.</p>
+          <p class="text-slate-400 text-[11px]">Liquid cash is sized appropriately to sustain operational needs without incurring excessive purchasing-power drag.</p>
         `;
       }
 
-      // Ledger Table
       renderLedger(data);
     }
 
-    // RENDER CATEGORY DONUT & VARIANCE CARDS
     function renderCategorySection(data) {
       document.getElementById('donutCenterAmount').textContent = formatInr(data.totalLivingSpend);
       document.getElementById('sumNeedsAmt').textContent = formatInr(data.needsSpend);
       document.getElementById('sumWantsAmt').textContent = formatInr(data.wantsSpend);
 
-      const totalLiving = data.totalLivingSpend || 1;
-      const needsShare = ((data.needsSpend / totalLiving) * 100).toFixed(0);
-      const wantsShare = ((data.wantsSpend / totalLiving) * 100).toFixed(0);
-
-      document.getElementById('sumNeedsShare').textContent = `${needsShare}% of living`;
-      document.getElementById('sumWantsShare').textContent = `${wantsShare}% of living`;
-
-      // Draw SVG Donut
       const svg = document.getElementById('categoryDonutSvg');
       svg.innerHTML = '';
       const radius = 38;
       const circumference = 2 * Math.PI * radius;
       let strokeOffset = 0;
+      const totalLiving = data.totalLivingSpend || 1;
 
-      // Filter categories for cards
       let displayCategories = MASTER_CATEGORIES.filter(c => {
         if (appState.activeCategoryFilter === 'NEED') return c.bucket === 'NEED';
         if (appState.activeCategoryFilter === 'WANT') return c.bucket === 'WANT';
         return true;
       });
 
-      // Sort by highest spend
-      displayCategories.sort((a, b) => data.catSpendMap[b.id] - data.catSpendMap[a.id]);
+      displayCategories.sort((a, b) => (data.catSpendMap[b.id] || 0) - (data.catSpendMap[a.id] || 0));
 
-      // Draw slices
       MASTER_CATEGORIES.forEach(c => {
-        const spend = data.catSpendMap[c.id];
+        const spend = data.catSpendMap[c.id] || 0;
         if (spend > 0) {
           const pct = spend / totalLiving;
           const strokeDash = pct * circumference;
@@ -1696,14 +1628,13 @@
           circle.setAttribute('stroke-dashoffset', (-strokeOffset).toString());
           circle.setAttribute('class', 'transition-all duration-300 hover:opacity-80 cursor-pointer');
 
-          // Hover interaction
           circle.addEventListener('mouseenter', () => {
             document.getElementById('donutCenterAmount').textContent = formatInr(spend);
             document.getElementById('donutCenterSub').textContent = `${c.name} (${(pct * 100).toFixed(1)}%)`;
           });
           circle.addEventListener('mouseleave', () => {
             document.getElementById('donutCenterAmount').textContent = formatInr(data.totalLivingSpend);
-            document.getElementById('donutCenterSub').textContent = '100% of outflows';
+            document.getElementById('donutCenterSub').textContent = 'Total Outflow';
           });
 
           svg.appendChild(circle);
@@ -1722,13 +1653,12 @@
         svg.appendChild(circle);
       }
 
-      // Render Category Cards Grid
       const grid = document.getElementById('categoryCardsGrid');
       grid.innerHTML = '';
 
       displayCategories.forEach(cat => {
         const spend = data.catSpendMap[cat.id] || 0;
-        const cap = appState.categoryLimits[cat.id] || cat.defaultCap;
+        const cap = Number(appState.categoryLimits[cat.id]) || cat.defaultCap;
         const pct = cap > 0 ? (spend / cap) * 100 : 0;
         const isOver = spend > cap;
 
@@ -1749,7 +1679,7 @@
 
             <div class="mt-2.5 flex items-baseline justify-between font-mono">
               <span class="text-xs text-white font-bold">${formatInr(spend)} <span class="text-[10px] text-slate-400 font-normal">/ ${formatInr(cap)}</span></span>
-              <button type="button" onclick="openCategoryLimitsModal('${cat.id}')" class="text-[10px] text-slate-400 hover:text-indigo-400 transition" title="Edit this limit">
+              <button type="button" onclick="openCategoryLimitsModal('${cat.id}')" class="text-[10px] text-slate-400 hover:text-indigo-400 transition" title="Edit category limit">
                 ✏️
               </button>
             </div>
@@ -1772,19 +1702,27 @@
       });
     }
 
-    // RENDER AUDIT LEDGER TABLE
     function renderLedger(data) {
       const lockMonth = document.getElementById('chkLockSelectedMonth').checked;
-      const txs = lockMonth ? data.periodTxs : data.allTxs;
+      const search = (document.getElementById('inputLedgerSearch').value || '').toLowerCase().trim();
+      let txs = lockMonth ? data.periodTxs : data.allTxs;
+
+      if (search) {
+        txs = txs.filter(t => 
+          (t.desc && t.desc.toLowerCase().includes(search)) ||
+          (t.category && t.category.toLowerCase().includes(search)) ||
+          (t.type && t.type.toLowerCase().includes(search))
+        );
+      }
+
       const tbody = document.getElementById('ledgerTableBody');
       tbody.innerHTML = '';
 
       if (txs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No transactions recorded for this period.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No transactions recorded for this period. Click <strong>➕ Log Txn</strong> to add one.</td></tr>`;
         return;
       }
 
-      // Display in reverse chronological order
       const reversed = [...txs].reverse();
       reversed.forEach(tx => {
         const tr = document.createElement('tr');
@@ -1805,15 +1743,17 @@
           </td>
           <td class="py-2.5 px-3">
             <span class="text-slate-300 font-medium">${tx.category}</span>
-            ${tx.budgetBucket !== 'NOT_APPLICABLE' ? `<span class="text-[9px] px-1 py-0.2 rounded ml-1 ${tx.budgetBucket === 'NEED' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-rose-500/10 text-rose-400'}">${tx.budgetBucket}</span>` : ''}
           </td>
           <td class="py-2.5 px-3 text-slate-400 max-w-[200px] truncate" title="${tx.desc || ''}">${tx.desc || '-'}</td>
           <td class="py-2.5 px-3 text-right font-mono ${amtColor}">
             ${isPositive ? '+' : '-'}${formatInr(tx.amount)}
           </td>
-          <td class="py-2.5 px-3 text-center">
-            <button type="button" onclick="deleteTransaction('${tx.id}')" class="text-slate-500 hover:text-rose-400 transition" title="Delete entry">
-              ✕
+          <td class="py-2.5 px-3 text-center whitespace-nowrap space-x-1.5">
+            <button type="button" onclick="editTransaction('${tx.id}')" class="text-slate-400 hover:text-indigo-400 transition" title="Edit Transaction">
+              ✏️
+            </button>
+            <button type="button" onclick="deleteTransaction('${tx.id}')" class="text-slate-400 hover:text-rose-400 transition" title="Delete Transaction">
+              🗑️
             </button>
           </td>
         `;
@@ -1822,14 +1762,15 @@
       });
     }
 
-    // FORM & EVENT HANDLERS (CRITICAL BUG FIX: STRICT PREVENT DEFAULT)
+    // EVENT HANDLERS & MODAL CONTROLS
     function setupEventHandlers() {
-      // 1. Log Transaction Submit
+      // Form: Log/Edit Txn Submit
       const formTx = document.getElementById('formLogTxn');
       formTx.addEventListener('submit', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
+        const editId = document.getElementById('txEditId').value;
         const date = document.getElementById('txDate').value;
         const type = document.getElementById('txType').value;
         const amount = parseFloat(document.getElementById('txAmount').value);
@@ -1845,32 +1786,46 @@
           return;
         }
 
-        const newTx = {
-          id: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-          date: date || new Date().toISOString().split('T')[0],
-          type,
-          source,
-          destination,
-          channel,
-          category,
-          budgetBucket: bucket,
-          amount,
-          desc: desc || `${type} via ${channel}`
-        };
+        if (editId) {
+          const idx = appState.transactions.findIndex(t => t.id === editId);
+          if (idx !== -1) {
+            appState.transactions[idx] = {
+              id: editId,
+              date,
+              type,
+              source,
+              destination,
+              channel,
+              category,
+              budgetBucket: bucket,
+              amount,
+              desc: desc || `${type} via ${channel}`
+            };
+            showToast('Transaction updated successfully!', '✏️');
+          }
+        } else {
+          const newTx = {
+            id: `tx-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+            date: date || new Date().toISOString().split('T')[0],
+            type,
+            source,
+            destination,
+            channel,
+            category,
+            budgetBucket: bucket,
+            amount,
+            desc: desc || `${type} via ${channel}`
+          };
+          appState.transactions.push(newTx);
+          showToast('Transaction logged and committed!', '✅');
+        }
 
-        // Commit to state & storage
-        appState.transactions.push(newTx);
         saveState();
-
-        // Close modal & reset form
         closeTxModal();
-        showToast('Transaction logged and committed successfully!', '✅');
-
-        // Immediate reactive re-render
         renderApp();
       });
 
-      // 2. Settlement Form Submit
+      // Form: Settle Bill Submit
       const formSettle = document.getElementById('formSettleBill');
       formSettle.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -1898,17 +1853,17 @@
           category: 'Card Bill Payment',
           budgetBucket: 'NOT_APPLICABLE',
           amount: amt,
-          desc: `Full/Safe Settlement for ${cardName} from ${sourceBank === 'FEDERAL_SAVINGS' ? 'Federal Bank' : 'HDFC Salary'}`
+          desc: `Bill Settlement for ${cardName} from ${sourceBank === 'FEDERAL_SAVINGS' ? 'Federal Bank' : 'HDFC Salary'}`
         };
 
         appState.transactions.push(settlementTx);
         saveState();
         closeSettleModal();
-        showToast(`${cardName} bill settled successfully!`, '⚡');
+        showToast(`${cardName} settled for ${formatInr(amt)}!`, '⚡');
         renderApp();
       });
 
-      // 3. Category Limits Save Handler
+      // Form: Category Limits Save
       document.getElementById('btnSaveCategoryLimits').addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -1925,13 +1880,35 @@
 
         saveState();
         closeCategoryLimitsModal();
-        showToast('Category limits updated & recalibrated!', '🎯');
+        showToast('Category limits saved!', '🎯');
         renderApp();
       });
 
-      // 4. Settings Form Submit
+      // Form: Settings Save
       const formSettings = document.getElementById('formSettings');
-      // 5. Month Selector & Period Navigators (Dynamic Forward & Backward)
+      formSettings.addEventListener('submit', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        appState.accounts.hdfcOpening = parseFloat(document.getElementById('settingHdfcOpening').value) || 0;
+        appState.accounts.federalOpening = parseFloat(document.getElementById('settingFederalOpening').value) || 0;
+        appState.accounts.fdOpening = parseFloat(document.getElementById('settingFdOpening').value) || 0;
+        appState.accounts.ppfOpening = parseFloat(document.getElementById('settingPpfOpening').value) || 0;
+        appState.accounts.epfOpening = parseFloat(document.getElementById('settingEpfOpening').value) || 0;
+        appState.accounts.equityOpening = parseFloat(document.getElementById('settingEquityOpening').value) || 0;
+
+        appState.settings.signetLimit = parseFloat(document.getElementById('settingSignetLimit').value) || 24000;
+        appState.settings.auLimit = parseFloat(document.getElementById('settingAuLimit').value) || 90000;
+        appState.settings.monthlySalary = parseFloat(document.getElementById('settingMonthlySalary').value) || 92000;
+        appState.settings.safeCurPercent = parseFloat(document.getElementById('settingSafeCur').value) || 30;
+
+        saveState();
+        closeSettingsModal();
+        showToast('Settings & account balances saved!', '💾');
+        renderApp();
+      });
+
+      // Period Navigators
       document.getElementById('selPeriodNavigator').addEventListener('change', function (e) {
         appState.selectedPeriod = e.target.value;
         saveState();
@@ -1947,11 +1924,9 @@
           if (idx > 0) {
             appState.selectedPeriod = chronological[idx - 1];
           } else {
-            // Compute one month earlier dynamically
             const parts = appState.selectedPeriod.split('-');
             const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 2, 1);
-            const prevYM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            appState.selectedPeriod = prevYM;
+            appState.selectedPeriod = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
           }
         }
         saveState();
@@ -1967,29 +1942,25 @@
           if (idx !== -1 && idx < chronological.length - 1) {
             appState.selectedPeriod = chronological[idx + 1];
           } else {
-            // Compute one month forward dynamically (e.g. into December 2026, January 2027)
             const parts = appState.selectedPeriod.split('-');
             const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), 1);
-            const nextYM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            appState.selectedPeriod = nextYM;
+            appState.selectedPeriod = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
           }
         }
         saveState();
         renderApp();
       });
 
-      // 6. Modal Openers
-      document.getElementById('btnOpenTxModal').addEventListener('click', openTxModal);
+      // Modal Triggers & Ledger Filters
+      document.getElementById('btnOpenTxModal').addEventListener('click', () => openTxModal());
       document.getElementById('btnOpenSettings').addEventListener('click', openSettingsModal);
-      document.getElementById('btnOpenCategoryEditor').addEventListener('click', () => openCategoryLimitsModal());
       document.getElementById('chkLockSelectedMonth').addEventListener('change', renderApp);
+      document.getElementById('inputLedgerSearch').addEventListener('input', renderApp);
 
-      // 7. CSV Export & Import Handlers
       document.getElementById('btnExportCsv').addEventListener('click', exportCsv);
       document.getElementById('fileImportCsv').addEventListener('change', importCsv);
     }
 
-    // CATEGORY & TYPE HELPERS
     function handleTxTypeChange() {
       const type = document.getElementById('txType').value;
       const catRow = document.getElementById('rowCategoryAndBucket');
@@ -2038,9 +2009,10 @@
       renderApp();
     }
 
-    // MODAL VISIBILITY FUNCTIONS
-    function openTxModal() {
-      // Defaults to today's date or matches selected month if viewing a past month
+    function openTxModal(editTx = null) {
+      document.getElementById('modalTxTitle').textContent = editTx ? 'Edit Transaction' : 'Log Double-Entry Transaction';
+      document.getElementById('txEditId').value = editTx ? editTx.id : '';
+
       let defaultDate = new Date().toISOString().split('T')[0];
       if (appState.selectedPeriod && appState.selectedPeriod !== 'ALL') {
         const curYM = getCurrentCalendarYM();
@@ -2048,11 +2020,11 @@
           defaultDate = `${appState.selectedPeriod}-01`;
         }
       }
-      document.getElementById('txDate').value = defaultDate;
-      document.getElementById('txAmount').value = '';
-      document.getElementById('txDesc').value = '';
 
-      // Populate Category Dropdown
+      document.getElementById('txDate').value = editTx ? editTx.date : defaultDate;
+      document.getElementById('txAmount').value = editTx ? editTx.amount : '';
+      document.getElementById('txDesc').value = editTx ? editTx.desc : '';
+
       const catSelect = document.getElementById('txCategory');
       catSelect.innerHTML = '';
       MASTER_CATEGORIES.forEach(c => {
@@ -2062,14 +2034,37 @@
         catSelect.appendChild(opt);
       });
 
+      if (editTx) {
+        document.getElementById('txType').value = editTx.type;
+        document.getElementById('txChannel').value = editTx.channel;
+        document.getElementById('txSource').value = editTx.source;
+        document.getElementById('txDestination').value = editTx.destination;
+        document.getElementById('txCategory').value = editTx.category;
+        document.getElementById('txBucket').value = editTx.budgetBucket;
+      }
+
       handleTxTypeChange();
-      handleCategorySelection();
+      if (!editTx) handleCategorySelection();
 
       document.getElementById('modalLogTxn').classList.remove('hidden');
     }
 
     function closeTxModal() {
       document.getElementById('modalLogTxn').classList.add('hidden');
+    }
+
+    function editTransaction(id) {
+      const tx = appState.transactions.find(t => t.id === id);
+      if (tx) openTxModal(tx);
+    }
+
+    function deleteTransaction(id) {
+      if (confirm('Delete this ledger record? Balances and reports will recompute immediately.')) {
+        appState.transactions = appState.transactions.filter(t => t.id !== id);
+        saveState();
+        showToast('Transaction removed', '🗑️');
+        renderApp();
+      }
     }
 
     function openSettleModal(cardKey) {
@@ -2082,7 +2077,6 @@
       document.getElementById('settleAmount').value = cardDue > 0 ? cardDue : '';
       document.getElementById('settleDate').value = new Date().toISOString().split('T')[0];
 
-      // Smart routing: if federal bank has safe buffer (>₹5k after payment), use federal UPI, else HDFC
       if (data.balFederal - cardDue >= 5000) {
         document.getElementById('settleSourceBank').value = 'FEDERAL_SAVINGS';
       } else {
@@ -2101,7 +2095,7 @@
       container.innerHTML = '';
 
       MASTER_CATEGORIES.forEach(c => {
-        const currentCap = appState.categoryLimits[c.id] || c.defaultCap;
+        const currentCap = Number(appState.categoryLimits[c.id]) || c.defaultCap;
         const row = document.createElement('div');
         row.className = 'bg-slate-850 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3';
         row.id = `limitRow_${c.id}`;
@@ -2156,7 +2150,7 @@
 
       MASTER_CATEGORIES.forEach(c => {
         const el = document.getElementById(`capInput_${c.id}`);
-        const val = el ? (parseFloat(el.value) || 0) : (appState.categoryLimits[c.id] || c.defaultCap);
+        const val = el ? (parseFloat(el.value) || 0) : (Number(appState.categoryLimits[c.id]) || c.defaultCap);
         total += val;
         if (c.bucket === 'NEED') needs += val;
         else wants += val;
@@ -2173,14 +2167,24 @@
         if (el) el.value = c.defaultCap;
       });
       recalcModalCaps();
-      showToast('Reset to default ₹54,500 standards', '🔄');
+      showToast('Reset to default ₹54,500 limits', '🔄');
     }
 
     function openSettingsModal() {
-      document.getElementById('settingMonthlySalary').value = appState.settings.monthlySalary || 92000;
-      document.getElementById('settingSignetLimit').value = appState.settings.signetLimit || 24000;
-      document.getElementById('settingAuLimit').value = appState.settings.auLimit || 90000;
-      document.getElementById('settingSafeCur').value = appState.settings.safeCurPercent || 30;
+      const acc = appState.accounts;
+      const set = appState.settings;
+
+      document.getElementById('settingHdfcOpening').value = acc.hdfcOpening;
+      document.getElementById('settingFederalOpening').value = acc.federalOpening;
+      document.getElementById('settingFdOpening').value = acc.fdOpening;
+      document.getElementById('settingPpfOpening').value = acc.ppfOpening;
+      document.getElementById('settingEpfOpening').value = acc.epfOpening;
+      document.getElementById('settingEquityOpening').value = acc.equityOpening;
+
+      document.getElementById('settingSignetLimit').value = set.signetLimit;
+      document.getElementById('settingAuLimit').value = set.auLimit;
+      document.getElementById('settingMonthlySalary').value = set.monthlySalary;
+      document.getElementById('settingSafeCur').value = set.safeCurPercent;
 
       document.getElementById('modalSettings').classList.remove('hidden');
     }
@@ -2190,22 +2194,16 @@
     }
 
     function hardResetEngine() {
-      if (confirm('Are you sure you want to hard reset all data back to factory state?')) {
+      if (confirm('Warning: This will clear all transactions and reset your accounts back to a fresh state. Continue?')) {
         localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-    }
-
-    function deleteTransaction(id) {
-      if (confirm('Delete this ledger record? Double-entry balances will immediately recompute.')) {
-        appState.transactions = appState.transactions.filter(t => t.id !== id);
+        appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
         saveState();
-        showToast('Transaction removed', '🗑️');
+        closeSettingsModal();
+        showToast('All data purged. Ready for fresh transactions!', '🧹');
         renderApp();
       }
     }
 
-    // CSV IMPORT / EXPORT ENGINE
     function exportCsv() {
       const headers = ['id', 'date', 'type', 'source', 'destination', 'channel', 'category', 'budgetBucket', 'amount', 'desc'];
       const rows = appState.transactions.map(t => [
@@ -2229,7 +2227,7 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast('Ledger exported to CSV successfully!', '📁');
+      showToast('Ledger exported to CSV', '📁');
     }
 
     function importCsv(event) {
@@ -2264,7 +2262,7 @@
           if (newTxs.length > 0) {
             appState.transactions = newTxs;
             saveState();
-            showToast(`Imported ${newTxs.length} records successfully!`, '📥');
+            showToast(`Imported ${newTxs.length} records!`, '📥');
             renderApp();
           }
         } catch (err) {
@@ -2274,7 +2272,6 @@
       reader.readAsText(file);
     }
 
-    // FORMATTING UTILITIES
     function formatInr(val) {
       const num = Math.round(val || 0);
       return '₹' + num.toLocaleString('en-IN');
@@ -2287,6 +2284,7 @@
         'CC_FEDERAL_SIGNET': 'Signet CC',
         'CC_PAYTM_AU': 'Paytm AU CC',
         'HDFC_PPF': 'HDFC PPF',
+        'EQUITY_ASSETS': 'Equity / MF',
         'MERCHANT_EXPENSE': 'Living Outflow',
         'EXTERNAL_INFLOW': 'External Salary'
       };
@@ -2304,41 +2302,15 @@
       }
     }
 
-    // PWA INSTALLATION PROMPT HANDLER
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const btn = document.getElementById('btnPwaInstall');
-      if (btn) {
-        btn.classList.remove('hidden');
-        btn.addEventListener('click', () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-              deferredPrompt = null;
-              btn.classList.add('hidden');
-            });
-          }
-        });
-      }
-    });
-
-    // Minimal In-Memory Service Worker for Offline PWA Installation
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        const swBlob = new Blob([`
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `], { type: 'application/javascript' });
-
-        navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope: './' })
-          .catch(() => { /* Service worker registration fallback */ });
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .catch(() => {});
       });
     }
 
-    // APPLICATION ENTRY POINT
+    // App Initialization
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
       setupEventHandlers();
