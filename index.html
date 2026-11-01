@@ -123,10 +123,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </button>
         <select id="selPeriodNavigator" class="bg-slate-800 text-slate-100 font-semibold text-xs sm:text-sm rounded-lg px-3 py-1.5 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
-          <option value="2026-10">October 2026 (Active Period)</option>
-          <option value="2026-09">September 2026</option>
-          <option value="2026-08">August 2026</option>
-          <option value="ALL">All Time / Cumulative View</option>
+          <!-- Dynamically populated periods -->
         </select>
         <button id="btnNextMonth" type="button" title="Next Month" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -1073,10 +1070,53 @@
       { id: 'tx-202608-05', date: '2026-08-15', type: 'ASSET_ALLOCATION', source: 'HDFC_SALARY', destination: 'HDFC_PPF', channel: 'NETBANKING', category: 'Sovereign Investment', budgetBucket: 'NOT_APPLICABLE', amount: 12500, desc: 'HDFC PPF Sovereign Tax-Free Contribution' }
     ];
 
+    // Helper: Returns current calendar YYYY-MM
+    function getCurrentCalendarYM() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      return `${y}-${m}`;
+    }
+
+    // Helper: Formats YYYY-MM into friendly string (e.g. "November 2026")
+    function formatYMToLabel(ym) {
+      if (ym === 'ALL') return 'All Time / Cumulative View';
+      const parts = ym.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = new Date(y, m, 1);
+      return d.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+    }
+
+    // Helper: Generates list of dynamic periods forward and backward
+    function getDynamicPeriods(transactions, activePeriod) {
+      const currentYM = getCurrentCalendarYM();
+      const months = new Set([currentYM, '2026-10', '2026-09', '2026-08']);
+
+      if (activePeriod && activePeriod !== 'ALL') {
+        months.add(activePeriod);
+      }
+
+      transactions.forEach(t => {
+        if (t.date && t.date.length >= 7) {
+          months.add(t.date.substring(0, 7));
+        }
+      });
+
+      // Sort chronological ascending
+      const sortedAsc = Array.from(months).sort();
+
+      // Return both ascending array and dropdown options (descending order)
+      return {
+        chronological: sortedAsc,
+        dropdownList: ['ALL', ...sortedAsc.slice().reverse()]
+      };
+    }
+
     // Central Application State
     let appState = {
       version: 2,
-      selectedPeriod: '2026-10',
+      selectedPeriod: getCurrentCalendarYM(), // Defaults dynamically to current calendar month (e.g. 2026-11)
       activeCategoryFilter: 'ALL',
       settings: {
         monthlySalary: 92000,
@@ -1101,7 +1141,8 @@
             appState.settings = Object.assign({}, appState.settings, parsed.settings || {});
             appState.categoryLimits = Object.assign({}, parsed.categoryLimits || {});
             appState.transactions = Array.isArray(parsed.transactions) ? parsed.transactions : DEFAULT_TRANSACTIONS;
-            if (parsed.selectedPeriod) appState.selectedPeriod = parsed.selectedPeriod;
+            // Retain saved period if explicitly stored, or default to current calendar month
+            appState.selectedPeriod = parsed.selectedPeriod || getCurrentCalendarYM();
           }
         } else {
           // Initialize default limits
@@ -1109,6 +1150,7 @@
             appState.categoryLimits[c.id] = c.defaultCap;
           });
           appState.transactions = [...DEFAULT_TRANSACTIONS];
+          appState.selectedPeriod = getCurrentCalendarYM();
           saveState();
         }
       } catch (err) {
@@ -1117,6 +1159,7 @@
           appState.categoryLimits[c.id] = c.defaultCap;
         });
         appState.transactions = [...DEFAULT_TRANSACTIONS];
+        appState.selectedPeriod = getCurrentCalendarYM();
         saveState();
       }
 
@@ -1338,8 +1381,18 @@
         }
       });
 
-      // Daily burn rate calculation based on days elapsed
-      const currentDay = selPeriod === '2026-10' ? 30 : 30; // October active day
+      // Daily burn rate calculation based on days elapsed in selected month
+      const today = new Date();
+      const currentCalYM = getCurrentCalendarYM();
+      let currentDay = 30;
+
+      if (selPeriod === currentCalYM) {
+        currentDay = Math.max(1, today.getDate());
+      } else if (selPeriod !== 'ALL') {
+        const parts = selPeriod.split('-');
+        currentDay = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), 0).getDate();
+      }
+
       const dailyBurn = currentDay > 0 ? (totalLivingSpend / currentDay) : 0;
       const projectedMonthTotal = dailyBurn * 30;
 
@@ -1409,9 +1462,18 @@
     // UI RENDER PIPELINE
     function renderApp() {
       const data = computeEngine();
+      const currentCalYM = getCurrentCalendarYM();
 
-      // 0. Update Period Navigator Quick Stats
-      document.getElementById('selPeriodNavigator').value = appState.selectedPeriod;
+      // 0. Update Dynamic Period Navigator Dropdown
+      const { chronological, dropdownList } = getDynamicPeriods(appState.transactions, appState.selectedPeriod);
+      const selPeriodEl = document.getElementById('selPeriodNavigator');
+      
+      selPeriodEl.innerHTML = dropdownList.map(ym => {
+        const isCurrent = (ym === currentCalYM);
+        const label = formatYMToLabel(ym) + (isCurrent ? ' (Active Period)' : '');
+        return `<option value="${ym}" ${ym === appState.selectedPeriod ? 'selected' : ''}>${label}</option>`;
+      }).join('');
+
       document.getElementById('navPeriodInflow').textContent = formatInr(data.periodInflow);
       document.getElementById('navPeriodOutflow').textContent = formatInr(data.periodOutflow);
       document.getElementById('navPeriodSurplus').textContent = formatInr(Math.max(0, data.periodInflow - data.periodOutflow));
@@ -1869,27 +1931,7 @@
 
       // 4. Settings Form Submit
       const formSettings = document.getElementById('formSettings');
-      formSettings.addEventListener('submit', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const salary = parseFloat(document.getElementById('settingMonthlySalary').value);
-        const signetLim = parseFloat(document.getElementById('settingSignetLimit').value);
-        const auLim = parseFloat(document.getElementById('settingAuLimit').value);
-        const safeCur = parseFloat(document.getElementById('settingSafeCur').value);
-
-        if (!isNaN(salary) && salary > 0) appState.settings.monthlySalary = salary;
-        if (!isNaN(signetLim) && signetLim > 0) appState.settings.signetLimit = signetLim;
-        if (!isNaN(auLim) && auLim > 0) appState.settings.auLimit = auLim;
-        if (!isNaN(safeCur) && safeCur > 0) appState.settings.safeCurPercent = safeCur;
-
-        saveState();
-        closeSettingsModal();
-        showToast('Settings saved & applied successfully!', '⚙️');
-        renderApp();
-      });
-
-      // 5. Month Selector & Period Navigators
+      // 5. Month Selector & Period Navigators (Dynamic Forward & Backward)
       document.getElementById('selPeriodNavigator').addEventListener('change', function (e) {
         appState.selectedPeriod = e.target.value;
         saveState();
@@ -1897,23 +1939,43 @@
       });
 
       document.getElementById('btnPrevMonth').addEventListener('click', () => {
-        const periods = ['2026-08', '2026-09', '2026-10', 'ALL'];
-        let idx = periods.indexOf(appState.selectedPeriod);
-        if (idx > 0) {
-          appState.selectedPeriod = periods[idx - 1];
-          saveState();
-          renderApp();
+        const { chronological } = getDynamicPeriods(appState.transactions, appState.selectedPeriod);
+        if (appState.selectedPeriod === 'ALL') {
+          appState.selectedPeriod = chronological[chronological.length - 1];
+        } else {
+          const idx = chronological.indexOf(appState.selectedPeriod);
+          if (idx > 0) {
+            appState.selectedPeriod = chronological[idx - 1];
+          } else {
+            // Compute one month earlier dynamically
+            const parts = appState.selectedPeriod.split('-');
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 2, 1);
+            const prevYM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            appState.selectedPeriod = prevYM;
+          }
         }
+        saveState();
+        renderApp();
       });
 
       document.getElementById('btnNextMonth').addEventListener('click', () => {
-        const periods = ['2026-08', '2026-09', '2026-10', 'ALL'];
-        let idx = periods.indexOf(appState.selectedPeriod);
-        if (idx !== -1 && idx < periods.length - 1) {
-          appState.selectedPeriod = periods[idx + 1];
-          saveState();
-          renderApp();
+        const { chronological } = getDynamicPeriods(appState.transactions, appState.selectedPeriod);
+        if (appState.selectedPeriod === 'ALL') {
+          appState.selectedPeriod = getCurrentCalendarYM();
+        } else {
+          const idx = chronological.indexOf(appState.selectedPeriod);
+          if (idx !== -1 && idx < chronological.length - 1) {
+            appState.selectedPeriod = chronological[idx + 1];
+          } else {
+            // Compute one month forward dynamically (e.g. into December 2026, January 2027)
+            const parts = appState.selectedPeriod.split('-');
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10), 1);
+            const nextYM = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            appState.selectedPeriod = nextYM;
+          }
         }
+        saveState();
+        renderApp();
       });
 
       // 6. Modal Openers
@@ -1978,7 +2040,15 @@
 
     // MODAL VISIBILITY FUNCTIONS
     function openTxModal() {
-      document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+      // Defaults to today's date or matches selected month if viewing a past month
+      let defaultDate = new Date().toISOString().split('T')[0];
+      if (appState.selectedPeriod && appState.selectedPeriod !== 'ALL') {
+        const curYM = getCurrentCalendarYM();
+        if (appState.selectedPeriod !== curYM) {
+          defaultDate = `${appState.selectedPeriod}-01`;
+        }
+      }
+      document.getElementById('txDate').value = defaultDate;
       document.getElementById('txAmount').value = '';
       document.getElementById('txDesc').value = '';
 
